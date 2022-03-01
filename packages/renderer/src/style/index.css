@@ -1,0 +1,12 @@
+body {
+  font-family: 'Inter';
+}
+
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: fallback;
+  src: url(../assets/Inter.ttf) format('ttf');
+}

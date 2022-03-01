@@ -1,0 +1,1 @@
+export { default as Insight } from './Insight.vue'

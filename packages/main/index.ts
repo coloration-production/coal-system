@@ -1,6 +1,15 @@
-import { app, BrowserWindow, shell } from 'electron'
+import { app, BrowserWindow, shell, Menu } from 'electron'
 import { release } from 'os'
 import { join } from 'path'
+import './auth'
+import './dust'
+
+const windowWidth = 1600
+const windowMinWidth = 480
+
+// hide menu
+Menu.setApplicationMenu(null)
+
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
@@ -21,6 +30,8 @@ async function createWindow() {
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs')
     },
+    width: windowWidth,
+    minWidth: windowMinWidth,
   })
 
   if (app.isPackaged || process.env["DEBUG"]) {
