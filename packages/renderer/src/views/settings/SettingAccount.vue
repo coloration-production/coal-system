@@ -64,7 +64,7 @@ function handleReset () {
           v-model="inputOldPassword" 
           type="password" 
           :suggest="oldPasswordSuggest"
-          :color="oldPasswordSuggest ? 'red' : ''"
+          :color="oldPasswordSuggest ? 'red' : undefined"
         />
       </div>
       <ITitle :level="3"  class="mb-2">新密码</ITitle>
@@ -87,7 +87,7 @@ function handleReset () {
             type="password"
             v-model="newConfirmPassword"
             :suggest="confirmSuggest"
-            :color="confirmSuggest ? 'red' : ''" />
+            :color="confirmSuggest ? 'red' : undefined" />
         </div>
       </IFlexRow>
     </ILayout>

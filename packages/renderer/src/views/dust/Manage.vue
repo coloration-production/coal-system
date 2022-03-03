@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import { IPage, ICard, IBadge, IDirectionIcon } from '@coloration/island'
-import { Table } from '../../components'
-import { ref } from 'vue'
+import { Table, StatusBadge } from '../../components'
+import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { DustNodeDto } from '../../../../types'
 
+const store = useStore()
 const router = useRouter()
 const selectedItems = ref([])
-const descVisibleSigns = ref([])
+const descVisibleSigns = ref<boolean[]>([])
 const maxValueEditable = ref(false)
 const maxValue = ref(150)
 
@@ -17,28 +20,28 @@ function calStatus(s: number) {
   }
 }
 
+const items = computed<DustNodeDto[]>(() => store.getters.dustNodes)
+
+watch(items, () => {
+  descVisibleSigns.value = items.value.map(() => true)
+}, { immediate: true })
+
 const columns = [
-  { prop: 'device_no', label: '节点编号' },
-  { prop: 'ip', label: '节点IP' },
+  { prop: 'id', label: '节点编号' },
+  { prop: 'uri', label: '节点IP' },
   { prop: 'status', label: '节点状态' },
   { prop: 'device_count', label: '节点设备数量' },
   { prop: 'detail', label: '节点详情' },
 ]
 
-const items = [
-  { id: 1, device_no: 1, ip: '192.168.0.7', device_count: 4, status: 1 },
-  { id: 2, device_no: 2, ip: '192.168.0.8', device_count: 16, status: 1 },
-  { id: 3, device_no: 3, ip: '192.168.0.9', device_count: 0, status: 0 },
-  { id: 4, device_no: 4, ip: '192.168.0.10', device_count: 0, status: 1 },
-]
 
 
 const subColumns = [
-  { prop: 'device_no', label: '设备编号' },
-  { prop: 'work_address', label: '作业地点' },
-  { prop: 'dust_value', label: '当前值' },
-  { prop: 'dust_status', label: '状态' },
-  { prop: 'dust_trend', label: '趋势' },
+  { prop: 'id', label: '设备编号' },
+  { prop: 'name', label: '备注' },
+  // { prop: 'value', label: '当前值' },
+  { prop: 'status', label: '状态' },
+  // { prop: 'dust_trend', label: '趋势' },
 ]
 </script>
 <template>
@@ -53,30 +56,27 @@ const subColumns = [
           <td
             class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
           >
-            {{ item.device_no }}
+            {{ item.id }}
           </td>
           <td
             class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
           >
-            {{ item.ip }}
+            {{ item.uri }}
           </td>
           <td
             class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
           >
-
-            <IBadge :color="calStatus(item.status)?.color">
-              {{ calStatus(item.status)?.name }}
-            </IBadge>
+            <StatusBadge :status="item.status" />
           </td>
           <td
             class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
           >
-            {{ item.device_count }}
+            {{ item.clients.length }}
           </td>
           <td
             class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
           >
-            <div class="flex text-gray-400">
+            <div class="flex text-gray-400 select-none">
               <IDirectionIcon @click="descVisibleSigns[i] = !descVisibleSigns[i]" />
               
             </div>
@@ -86,8 +86,12 @@ const subColumns = [
           <td colspan="1000" class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap bg-gray-100">
             <Table
               :columns="subColumns"
-              :items="items"
+              :items="item.clients"
             >
+              <template #table-col-status="{ item: subItem, j}">
+              
+                <StatusBadge :status="subItem.status" :value="subItem.value" />
+              </template>
             </Table>
           </td>
         </tr>

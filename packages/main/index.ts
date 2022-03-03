@@ -8,7 +8,7 @@ const windowWidth = 1600
 const windowMinWidth = 480
 
 // hide menu
-Menu.setApplicationMenu(null)
+if (process.env.NODE_ENV === 'production') Menu.setApplicationMenu(null)
 
 
 // Disable GPU Acceleration for Windows 7

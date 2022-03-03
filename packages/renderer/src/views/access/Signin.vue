@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ITitle, ILabel, IInput, IButton, ILine, ILightBanner, IButtonText, IText, IFlexRow } from '@coloration/island'
+import { ITitle, ILabel, IInput, IButton, ILine, IButtonText, IText, IFlexRow } from '@coloration/island'
 import BussinessAuthContainer from './BussinessAuthContainer.vue'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'

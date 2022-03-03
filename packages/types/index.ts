@@ -1,3 +1,5 @@
+import { PlainObject } from "@coloration/kit"
+
 export type SigninPayload = {
   username: string
   password: string
@@ -6,6 +8,37 @@ export type SigninPayload = {
 export type UserDto = {
   username: string
 }
+
+export type NodeStatus = ClientStatus
+export enum ClientStatus {
+  offline = 0,
+  normal = 10,
+  warning = 20,
+  danger = 30,
+} 
+
+export const StatusMap = {
+  [ClientStatus.offline]: '离线',
+  [ClientStatus.normal]: '正常',
+  [ClientStatus.warning]: '异常',
+  [ClientStatus.danger]: '危险',
+}
+
+export interface DustNodeDto {
+  id: string,
+  uri: string
+  status: NodeStatus,
+  clients: DustClientDto[]
+}
+
+export interface DustClientDto {
+  id: string,
+  status: ClientStatus,
+  name: string,
+  value: number,
+  trend: number[]
+}
+
 
 export type ResetPasswordPayload = SigninPayload & {
   newPassword: string
