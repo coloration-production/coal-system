@@ -60,3 +60,50 @@ export enum RequestType {
   IMPORT_CONFIG_FILE,
   RESET_CONFIG_FILE,
 }
+
+export enum IotNodeSignal {
+  websocket = 'ws',
+  serial = 'serial',
+}
+
+export enum IotNodeProtocol {
+  rs485 = 'rs485',
+}
+
+export interface IIotNode {
+  signal: IotNodeSignal
+  uri: string
+  unit: string
+  protocol: IotNodeProtocol
+  readInterval: number // ms
+  readCommand: string
+  calcRatio: number
+  calcOffset: number
+  clients: IIotClient[]
+
+  addListener: (callback: (client: IIotClient, node: IIotNode) => void) => void
+  removeListener: (callback: Function) => void
+  mount: () => void 
+  unmount: () => void
+
+}
+
+export interface IIotClient {
+  name: string
+  calcRatio: number
+  calcOffset: number
+  unit: string
+  node: IIotNode,
+
+  getValueString: () => string
+
+}
+
+export interface IIotRs485Client extends IIotClient {
+  address: number,
+  readCommand: string
+  readInterval: number // ms
+  bit: number
+}
+
+
