@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ILayout, IDashboardIcon, IUsergroupIcon, IDotsIcon, IBarChartIcon } from '@coloration/island'
+import { ILayout, IDashboardIcon, IUsergroupIcon, IDotsIcon, IBarChartIcon, IBoardIcon } from '@coloration/island'
 import ISidebar from './ISidebar.vue'
 
 
@@ -8,8 +8,9 @@ const options = [
     { name: '数据概览', value: '/dashboard/insight', icon: IBarChartIcon },
     { name: '粉尘监控',  icon: IDashboardIcon, value: [
       { name: '设备列表', value: '/dashboard/dust-devices', },
-      { name: '节点状态', value: '/dashboard/dust-manage', },
+      { name: '设备管理', value: '/dashboard/dust-manage', },
     ] },
+    { name: '历史记录', value: '/dashboard/history', icon: IBoardIcon }
   ] },
   { name: '系统', value: [
     { name: '账号设置', value: '/dashboard/setting-account', icon: IUsergroupIcon }, 

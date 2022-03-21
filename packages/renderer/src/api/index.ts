@@ -27,3 +27,7 @@ export function importConfigFile (json: any) {
 export function resetConfigFile () {
   return request(RequestType.RESET_CONFIG_FILE)
 }
+
+export function startModule () {
+  return request(RequestType.START_MODULE)
+}

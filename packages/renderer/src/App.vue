@@ -2,8 +2,8 @@
 import { isNumber } from '@coloration/kit';
 import { onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { ClientStatus } from '../../types';
-import { exportConfigFile } from './api'
+import { ClientStatus, IpcType } from '../../types';
+import { exportConfigFile, startModule } from './api'
 
 const store = useStore()
 const connectPools: WebSocket[] = []
@@ -18,65 +18,13 @@ function reset () {
 
 function init () {
 
-
-  exportConfigFile()
-  .then((res: any) => {
-    conf = res.data
-    console.log(conf, 'xxxx')
-    const uris = Object.keys(conf.nodes)
-    store.dispatch('update', {
-      dust: {
-        unit: conf.unit,
-        max: [],
-        average: [],
-        interval: isNumber(Number(conf.interval)) ? Number(conf.interval) : 5,
-        nodes: uris.map((uri, i) => {
-          return {
-            id: `${i + 1}`,
-            status: ClientStatus.offline,
-            uri: uri,
-            clients: Object.keys(conf.nodes[uri]).map((clientPort, j) => {
-              return {
-                id: `${i + 1}-${clientPort}`,
-                name: conf.nodes[uri][clientPort],
-                status: ClientStatus.offline,
-                value: 0,
-                trend: []
-              }
-            })
-          }
-        })
-      }
-    })
-
-
-    uris.map(uri => {
-      const ws = new WebSocket(`ws://${uri}`)
-      ws.onopen = () => {
-        store.dispatch('nodeStatus', {
-          uri,
-          status: ClientStatus.normal
-        })
-      }
-
-      ws.onmessage = () => {
-
-      }
-
-      ws.onclose = () => {
-        store.dispatch('nodeStatus', {
-          uri,
-          status: ClientStatus.offline
-        })
-      }
-
-      ws.onerror = () => {
-        store.dispatch('nodeStatus', {
-          uri,
-          status: ClientStatus.offline
-        })
-      }
-    })
+  window.ipcRenderer.on(IpcType.IOT_TRANS, (event, data) => {
+    console.log('3333', data)
+    store.dispatch('', data)
+  })
+  startModule()
+  .then(() => {
+    console.log('????!!')
   })
 }
 

@@ -1,12 +1,13 @@
 D<script lang="ts" setup>
-import { IPage, ICard, ITitle, ILayout, IText, IButton, ILine, IFlexRow } from '@coloration/island'
+import { IPage, ICard, ITitle, ILayout, IText, IButton, ILine, IFlexRow, IModal } from '@coloration/island'
 import { onMounted, ref } from 'vue';
 import { exportConfigFile, importConfigFile, resetConfigFile } from '../../api'
-
+import { useToggle } from '@vueuse/core'
 
 const configData = ref<any>({})
 const editable = ref<boolean>(false)
 const codeBox = ref()
+const [resetVisible, toggleResetVisible] = useToggle(false)
 
 onMounted(() => {
   updateConfigDisplay()
@@ -38,6 +39,7 @@ function handleReset () {
   resetConfigFile()
   .then(() => {
     updateConfigDisplay()
+    toggleResetVisible(false)
   })
 }
 
@@ -57,7 +59,7 @@ function handleReset () {
 
       <IFlexRow horizontal="between">
         <div>
-          <IButton v-if="!editable" color="red" @click="handleReset" class="mr-2">重置</IButton>
+          <IButton v-if="!editable" color="red" @click="(toggleResetVisible as any)" class="mr-2">重置</IButton>
           <IButton v-if="!editable" @click="handleReset">拷贝</IButton>
         </div>
         <div>
@@ -70,5 +72,20 @@ function handleReset () {
     </ILayout>
 
   </ICard>
+
+  <IModal 
+    title="重置配置" 
+    :visible="resetVisible" 
+    @close="toggleResetVisible" 
+    
+    :line-visible="false">
+    你确定重置配置吗？重置后无法找回当前配置，建议先拷贝备份
+    <template #footer-cancel-button-name>
+        取消
+    </template>
+    <template #footer-confirm-button>
+      <IButton color="red" size="sm" type="primary" @click="handleReset">重置</IButton>
+    </template>
+  </IModal>
 </IPage>
 </template>

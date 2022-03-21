@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { IPage, ICard, IBadge, IDirectionIcon } from '@coloration/island'
+import { IPage, ICard, IBadge, IDirectionIcon, IPlusButton } from '@coloration/island'
 import { Table, StatusBadge } from '../../components'
 import { computed, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
@@ -45,8 +45,13 @@ const subColumns = [
 ]
 </script>
 <template>
-<IPage title="设备状态">
-  <ICard :title="`全部 控制节点 ${items.length}`">
+<IPage title="设备管理">
+  <ICard :title="`全部 控制线路 ${items.length}`">
+    <template v-slot:header-rest>
+      <IPlusButton type="primary">控制线路</IPlusButton>
+    </template>
+    
+
     <Table 
       :columns="columns"
       :items="items">

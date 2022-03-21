@@ -13,6 +13,7 @@ ipcMain.on(IpcType.REQUEST_MAIN_RECEIVE, (event, params) => {
     }
     const ctx = {
       reply,
+      event,
       type: params.type
     }
     const cb = _map.get(params.type)

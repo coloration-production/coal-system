@@ -5,7 +5,8 @@ import {
   SettingFeature,
   SettingAccount,
   DustDevices,
-  DustManage
+  DustManage,
+  History,
 } from '../views'
 import { DashboardContainer } from '../components'
 
@@ -18,6 +19,7 @@ const routes:RouteRecordRaw[] = [
       { path: 'insight', component: Insight },
       { path: 'dust-devices', component: DustDevices },
       { path: 'dust-manage', component: DustManage },
+      { path: 'history', component: History },
       { path: 'setting-feature', component: SettingFeature },
       { path: 'setting-account', component: SettingAccount },
     ]

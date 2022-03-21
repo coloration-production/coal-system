@@ -44,12 +44,13 @@ export type ResetPasswordPayload = SigninPayload & {
   newPassword: string
 }
 
-
 export enum IpcType {
   REQUEST_RENDERER_RECEIVE = 'REQUEST_RENDERER_RECEIVE',
   REQUEST_RENDERER_SEND = 'REQUEST_RENDERER_SEND',
   REQUEST_MAIN_RECEIVE = 'REQUEST_RENDERER_SEND',
   REQUEST_MAIN_SEND = 'REQUEST_RENDERER_RECEIVE',  
+
+  IOT_TRANS = 'IOT_TRANS'
 }
 
 export enum RequestType {
@@ -59,6 +60,8 @@ export enum RequestType {
   EXPORT_CONFIG_FILE,
   IMPORT_CONFIG_FILE,
   RESET_CONFIG_FILE,
+
+  START_MODULE,
 }
 
 export enum IotNodeSignal {
@@ -72,6 +75,7 @@ export enum IotNodeProtocol {
 
 export interface IIotNode {
   signal: IotNodeSignal
+  name: string
   uri: string
   unit: string
   protocol: IotNodeProtocol
