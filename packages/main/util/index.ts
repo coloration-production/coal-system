@@ -29,3 +29,18 @@ export function suffixCrc (str: string) {
 export function checkCrc (str: string) {
   return str === suffixCrc(str.slice(0, -4))
 }
+
+export function formatDate (d: Date) {
+  const t = toDouble
+  return `${d.getFullYear()}-${t(d.getMonth() + 1)}-${t(d.getDate())}`
+}
+
+export function formatTime (d: Date) {
+  const t = toDouble
+  return `${t(d.getHours())}:${t(d.getMinutes())}:${t(d.getSeconds())}`
+
+}
+
+export function toDouble (n: number) {
+  return n < 10 ? `0${n}` : `${n}`
+}

@@ -27,9 +27,9 @@ export class IotMockBus extends IotBus {
     this.clients.forEach(cl => {
       cl.mount()
     })
-
+    clearInterval(this.#timer)
     this.#timer = setInterval(() => {
-      const response = Buffer.from(`01030200${Math.ceil(Math.random() * 255).toString(16)}840A`, 'hex')
+      const response = Buffer.from(`0${Math.floor(Math.random() * this.clients.length) + 1}030200${Math.ceil(Math.random() * 255).toString(16)}840A`, 'hex')
       Promise.all(this.clients.map((cl) => cl.handler(response)))
       .then(() => {
         this.mod?.tick()
@@ -39,7 +39,7 @@ export class IotMockBus extends IotBus {
 
 
   unmount () {
-    this.status = IotTerminalStatus.offine
+    this.status = IotTerminalStatus.offline
     clearInterval(this.#timer)
   }
 

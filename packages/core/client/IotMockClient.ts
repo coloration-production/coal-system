@@ -1,7 +1,6 @@
 import { IotClient } from './IotClient'
 import { formatNumberAddressToHex, suffixCrc } from '../util'
 import { IotTerminalStatus } from '../type'
-import { IotWebSocketBus } from '../bus/IotWebSocketBus'
 import { IotBus } from '../bus/IotBus'
 
 export class IotMockClient extends IotClient {
@@ -9,7 +8,6 @@ export class IotMockClient extends IotClient {
   #updateCommand: string = ''
   #address: number = 1
   #timer: number = 0
-  #bus: IotWebSocketBus | null = null
 
   constructor (options: any, bus: IotBus) {
     super(options, bus)
@@ -20,10 +18,9 @@ export class IotMockClient extends IotClient {
 
   mount () {
     if (
-      !this.#bus 
-      || this.#bus.status !== IotTerminalStatus.normal
+      !this.bus 
+      || this.bus.status !== IotTerminalStatus.normal
     ) return
-    
     clearInterval(this.#timer)
     // 11 => 0A
     const hexAddress = formatNumberAddressToHex(this.#address)
@@ -35,7 +32,7 @@ export class IotMockClient extends IotClient {
     const readBuffer = Buffer.from(readBufferString, 'hex')
 
     this.#timer = setInterval(() => {
-      this.#bus?.send(readBuffer)
+      this.bus?.send(readBuffer)
     }, this.interval) as any
 
     super.mount()
@@ -49,7 +46,7 @@ export class IotMockClient extends IotClient {
   handler (response: Buffer) {
     if (this.#address !== response[0]) return Promise.resolve()
     const resCommand = response[1]
-    const responseData = response.slice(3, 3 + response[3])
+    const responseData = response.slice(3, 3 + response[2])
     if (parseInt(this.#readCommand.slice(0, 2)) === resCommand) {
       this.handleRead(responseData)
     }
@@ -58,11 +55,10 @@ export class IotMockClient extends IotClient {
   }
 
   handleRead (data: Buffer) {
-    const value = data.reduceRight((acc: number, current: number, i: number) => {
-      acc += current * Math.pow(256, i)
-      return acc
+    const value = data.reduce((acc: number, current: number, i: number) => {
+      return acc * Math.pow(256, i) + current
     }, 0)
 
-    this.value = this.clacValue(value)
+    this.value = Number(this.clacValue(value))
   }
 }

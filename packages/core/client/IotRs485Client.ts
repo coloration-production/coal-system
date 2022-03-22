@@ -9,7 +9,6 @@ export class IotRs485Client extends IotClient {
   #updateCommand: string = ''
   #address: number = 1
   #timer: number = 0
-  #bus: IotWebSocketBus | null = null
 
   constructor (options: any, bus: IotBus) {
     super(options, bus)
@@ -20,8 +19,8 @@ export class IotRs485Client extends IotClient {
 
   mount () {
     if (
-      !this.#bus 
-      || this.#bus.status !== IotTerminalStatus.normal
+      !this.bus 
+      || this.bus.status !== IotTerminalStatus.normal
     ) return
     
     clearInterval(this.#timer)
@@ -35,7 +34,7 @@ export class IotRs485Client extends IotClient {
     const readBuffer = Buffer.from(readBufferString, 'hex')
 
     this.#timer = setInterval(() => {
-      this.#bus?.send(readBuffer)
+      this.bus?.send(readBuffer)
     }, this.interval) as any
 
     super.mount()
@@ -63,6 +62,6 @@ export class IotRs485Client extends IotClient {
       return acc
     }, 0)
 
-    this.value = this.clacValue(value)
+    this.value = Number(this.clacValue(value))
   }
 }

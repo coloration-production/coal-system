@@ -5,10 +5,13 @@ import './auth'
 import './dust'
 
 const windowWidth = 1600
+const windowHeight = 1000
 const windowMinWidth = 480
 
 // hide menu
-if (process.env.NODE_ENV === 'production') Menu.setApplicationMenu(null)
+if (process.env.NODE_ENV === 'production') {
+  Menu.setApplicationMenu(null)
+}
 
 
 // Disable GPU Acceleration for Windows 7
@@ -26,11 +29,12 @@ let win: BrowserWindow | null = null
 
 async function createWindow() {
   win = new BrowserWindow({
-    title: 'Main window',
+    title: '粉尘信号管理系统',
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs')
     },
     width: windowWidth,
+    height: windowHeight,
     minWidth: windowMinWidth,
   })
 

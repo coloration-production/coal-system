@@ -2,29 +2,35 @@
 import { IPage, ICard, IButton, IBadge, IText, IHangText, IModal } from '@coloration/island'
 import { Table, StatusBadge } from '../../components'
 import { useToggle } from '@vueuse/core'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { getHistory, clearHistory } from '../../api';
+import { IotHistoryItemDto } from '../../../../core';
 
 const [confirmVisible, toggleConfirmVisible] = useToggle(false)
 
+onMounted(() => {
+  getHistory()
+  .then((res: any) => {
+    items.value = res.data
+  })
+})
+
 const columns = [
   { prop: 'date', label: '日期' },
-  { prop: 'valueMax', label: '最大值' },
-  { prop: 'valueTimes', label: '报警次数' },
+  { prop: 'max', label: '最大值' },
+  { prop: 'warningCount', label: '报警次数' },
   { prop: 'clients', label: '报警节点' },
 ]
 
-const items = ref([
-  { date: '2022-03-08', valueMax: '12', valueTimes: 0, client: []  },
-  { date: '2022-03-07', valueMax: '12', valueTimes: 0, client: []  },
-  { date: '2022-03-06', valueMax: '122', valueTimes: 3, client: []  },
-  { date: '2022-03-05', valueMax: '12', valueTimes: 0, client: []  },
-  { date: '2022-03-04', valueMax: '12', valueTimes: 0, client: []  },
-])
+const items = ref<IotHistoryItemDto[]>([])
 
 
 function handleClearHistory () {
-  items.value = []
-  toggleConfirmVisible(false)
+  clearHistory()
+  .then(() => {
+    items.value = []
+    toggleConfirmVisible(false)
+  })
 }
 
 </script>
@@ -37,6 +43,12 @@ function handleClearHistory () {
     <Table 
       :columns="columns"
       :items="items">
+
+      <template #table-col-clients="{ item }">
+        <IText size="xs" v-for="cl in item.clients" :key="cl" class="mr-2">
+          {{ cl }}
+        </IText>
+      </template>
     </Table>  
   </ICard>
 

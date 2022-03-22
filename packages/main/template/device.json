@@ -6,13 +6,15 @@
   "readCommand": "0300000002",
   "calcRatio": 0.1,
   "calcOffset": 0,
-  "warning": 1000,
-  "nodes": [
+  "warning": 23,
+  "fixcount": 2,
+  "buses": [
     {
       "name": "线路1",
       "uri": "192.168.0.7:6432",
       "clients": [
-        { "address": 1, "name": "设备1" }
+        { "address": 1, "name": "前部1" },
+        { "address": 1, "name": "左部1" }
       ]
     }
   ]

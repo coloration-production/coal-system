@@ -31,3 +31,11 @@ export function resetConfigFile () {
 export function startModule () {
   return request(RequestType.START_MODULE)
 }
+
+export function getHistory () {
+  return request(RequestType.READ_HISTORY)
+}
+
+export function clearHistory () {
+  return request(RequestType.CLEAR_HISTORY)
+}

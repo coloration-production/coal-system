@@ -50,7 +50,8 @@ export enum IpcType {
   REQUEST_MAIN_RECEIVE = 'REQUEST_RENDERER_SEND',
   REQUEST_MAIN_SEND = 'REQUEST_RENDERER_RECEIVE',  
 
-  IOT_TRANS = 'IOT_TRANS'
+  IOT_TRANS = 'IOT_TRANS',
+  IOT_WARNING = 'IOT_WARNING',
 }
 
 export enum RequestType {
@@ -62,6 +63,8 @@ export enum RequestType {
   RESET_CONFIG_FILE,
 
   START_MODULE,
+  READ_HISTORY,
+  CLEAR_HISTORY
 }
 
 export enum IotNodeSignal {

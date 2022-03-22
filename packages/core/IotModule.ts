@@ -1,20 +1,33 @@
 import { IotNodeFactory } from './IotNodeFactory'
 import { IotClient } from './client'
 import { IotBus } from './bus'
-import { FixLengthQueue } from './util'
-
+import { FixLengthQueue, debounce } from './util'
+import { IotModuleResponseBusDto, IotModuleResponseClientDto, IotModuleResponseDto, IotTerminalStatus } from './type'
 export class IotModule {
 
   static #ins: IotModule
 
   #buses: IotBus[] = []
-
+  fixCount = 2
+  unit = ''
+  warning = 10000
+  interval = 2000
+  cacheLength = 5
   max: number = 0
   average: number = 0
-  maxCache: FixLengthQueue = new FixLengthQueue(5)
-  averageCache: FixLengthQueue = new FixLengthQueue(5)
+  maxCache: FixLengthQueue = new FixLengthQueue(this.cacheLength)
+  averageCache: FixLengthQueue = new FixLengthQueue(this.cacheLength)
+  clientCount: number = 0
+  busCount: number = 0
+  busNormalCount: number = 0
+  busAbnormalCount: number = 0
+  busOfflineCount: number = 0
+  clientNormalCount: number = 0
+  clientAbnormalCount: number = 0
+  clientOfflineCount: number = 0
 
   cb: Function | undefined
+ 
   setMax () {
     this.max = this.#buses.reduce((max: number, n: IotBus) => {
       return n.clients.reduce((m: number, cl: IotClient) => {
@@ -27,21 +40,72 @@ export class IotModule {
 
   setAverage () {
     let length = 0
-    const total = this.#buses.reduce((max: number, n: IotBus) => {
-      return n.clients.reduce((m: number, cl: IotClient) => {
+    const total = this.#buses.reduce((average: number, n: IotBus) => {
+      return n.clients.reduce((ave: number, cl: IotClient) => {
         length++
-        return m + cl.average || 0
-      }, max)
+        return ave + cl.value || 0
+      }, average)
     }, 0)
 
-    this.average = length === 0 ? 0 : total / length
+    
+
+    this.average = Number((length === 0 ? 0 : total / length).toFixed(this.fixCount))
     this.averageCache.push(this.average)
   }
 
+  setCount () {
+    this.busCount = this.#buses.length
+    this.busNormalCount = 0
+    this.busAbnormalCount = 0
+    this.busOfflineCount = 0
+    this.clientNormalCount = 0
+    this.clientAbnormalCount = 0
+    this.clientOfflineCount = 0
+    this.clientCount = this.#buses.reduce((count: number, bus: IotBus) => {
+      switch (bus.status) {
+        case IotTerminalStatus.normal:
+          this.busNormalCount++
+          break
+        case IotTerminalStatus.abnormal:
+          this.busAbnormalCount++
+          break
+        case IotTerminalStatus.offline:
+          this.busOfflineCount++
+          break
+      }
+      return bus.clients.reduce((cnt: number, cl: IotClient) => {
+        switch (cl.status) {
+          case IotTerminalStatus.normal:
+            this.clientNormalCount++
+            break
+          case IotTerminalStatus.abnormal:
+            this.clientAbnormalCount++
+            break
+          case IotTerminalStatus.offline:
+            this.clientOfflineCount++
+            break
+        }
+
+        return cnt + 1
+      }, count)
+    }, 0)
+
+  }
+
   mount (options: any, cb?: Function) {
-    const { nodes, ...restOptions } = options
+    this.fixCount = options.fixCount || this.fixCount
+    this.unit = options.unit || this.unit
+    this.warning = options.warning || this.warning
+    this.interval = options.interval || this.interval
+    this.cacheLength = options.cacheLength || this.cacheLength
+
+    this.maxCache = new FixLengthQueue(this.cacheLength)
+    this.averageCache = new FixLengthQueue(this.cacheLength)
+
+
+    const { buses, ...restOptions } = options
     const nodeFactory = new IotNodeFactory()
-    this.#buses = nodes.map((n: any) => {
+    this.#buses = buses.map((n: any) => {
       return nodeFactory.create({ ...restOptions, ...n }, this)
     })
 
@@ -49,23 +113,23 @@ export class IotModule {
     this.cb = cb
   }
 
-  tick () {
+  tick = debounce(() => {
     this.setMax()
     this.setAverage()
+    this.setCount()
     this.notify()
-  }
+  }, 30)
 
-  getJSONData () {
-
-    const clients: any[] = []
-    const buses = this.#buses.map(bus => {
-
+  getJSONData (): IotModuleResponseDto {
+    const clients: IotModuleResponseClientDto[] = []
+    const buses: IotModuleResponseBusDto[] = this.#buses.map(bus => {
       const clientJsons = bus.clients.map(cl => {
 
-        const clJson = {
+        const clJson: IotModuleResponseClientDto = {
           name: cl.name,
           value: cl.value,
           cache: cl.cache,
+          status: cl.status,
           valueString: cl.clacValueString(),
         }
 
@@ -73,8 +137,6 @@ export class IotModule {
 
         return clJson
       })
-
-      
 
       return {
         name: bus.name,
@@ -90,8 +152,26 @@ export class IotModule {
       average: this.average,
       maxCache: this.maxCache.getList(),
       averageCache: this.averageCache.getList(),
+      cacheLength: this.cacheLength,
+      interval: this.interval,
+      busCount: {
+        total: this.busCount,
+        normal: this.busNormalCount,
+        abnormal: this.busAbnormalCount,
+        offline: this.busOfflineCount,
+      },
+      clientCount: {
+        total: this.clientCount,
+        normal: this.clientNormalCount,
+        abnormal: this.clientAbnormalCount,
+        offline: this.clientOfflineCount,
+      },
       buses,
-      clients
+      clients,
+      fixCount: this.fixCount,
+      unit: this.unit,
+      warning: this.warning,
+      
     }
   }
 

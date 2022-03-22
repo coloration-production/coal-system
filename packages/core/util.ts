@@ -61,3 +61,21 @@ export class FixLengthQueue<T = any> {
     return this.#list
   }
 }
+
+export function debounce (fn: Function, time: number) {
+  let timer: any = undefined
+  let enable = true
+
+  return function (...args: any[]) {
+    if (!enable) return
+    clearTimeout(timer)
+    timer = setTimeout(() => {
+      typeof fn === 'function' && (fn as any).apply(null, args)
+    }, time)
+
+    return function dispose (enable = true) {
+      clearTimeout(timer)
+      enable = enable
+    }
+  }
+}

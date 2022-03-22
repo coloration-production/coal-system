@@ -9,7 +9,7 @@ export class IotBus {
   unit: string = ''
   calcRatio: number = 1
   calcOffset: number = 0
-  status: IotTerminalStatus = IotTerminalStatus.offine
+  status: IotTerminalStatus = IotTerminalStatus.offline
   clients: IotClient[] = []
   mod: IotModule | null = null
 
@@ -31,7 +31,17 @@ export class IotBus {
 
 
   unmount () {
-    this.status = IotTerminalStatus.offine
+    this.status = IotTerminalStatus.offline
+  }
+
+  calcStatus () {
+    if (this.status === IotTerminalStatus.offline) return
+    if (this.clients.some(cl => cl.status === IotTerminalStatus.abnormal)) {
+      this.status = IotTerminalStatus.abnormal
+    }
+    else {
+      this.status = IotTerminalStatus.normal
+    }
   }
 
   send (data: any) {

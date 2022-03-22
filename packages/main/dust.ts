@@ -2,10 +2,13 @@ import defaultConfig from './template/device.json'
 import Store from 'electron-store'
 import { regist } from './requestServer'
 import { IpcType, RequestType } from '../types'
-import { IotModule } from '../core'
+import { IotModule, IotModuleResponseBusDto, IotModuleResponseDto, IotTerminalStatus } from '../core'
 import { ipcMain } from 'electron'
+import { formatDate, formatTime } from './util'
+import { IotHistory } from '../core/IotHistory'
 
 const DUST_CONFIG_STORE_KEY = 'COAL_DUST'
+
 
 const dustStore = new Store()
 
@@ -46,12 +49,53 @@ regist(RequestType.START_MODULE, (e: any) => {
   conf.protocol = ''
 
   const sys = IotModule.instance
-
-  sys.mount(conf, function onTick (data: any) {
+  sys.unmount()
+  sys.mount(conf, function onTick (data: IotModuleResponseDto) {
     e.event.reply(IpcType.IOT_TRANS, data)
+
+    const abnormalBuses = data.buses
+    .filter((bus: IotModuleResponseBusDto) => bus.status === IotTerminalStatus.abnormal)
+    
+    if (abnormalBuses.length > 0) {
+      const d = new Date()
+      const dateString = formatDate(d)
+      const timeString = formatTime(d)
+
+      const warningData = abnormalBuses.reduce((acc: any, bus: IotModuleResponseBusDto) => {
+
+        acc.bus.push(bus)
+        bus.clients
+        .filter(cl => cl.status === IotTerminalStatus.abnormal)
+        .forEach(cl => {
+          acc.client.push(cl)
+        })
+  
+        return acc
+      }, {
+        date: `${dateString} ${timeString}`,
+        bus: [],
+        client: [],
+      })
+
+      IotHistory.instance.setHistory(warningData)
+      e.event.reply(IpcType.IOT_WARNING, warningData)
+    }
+
+
   })
 
   return e.reply({ status: 200, message: '', data: conf })
 })
 
 
+regist(RequestType.READ_HISTORY, (e: any) => {
+  const history = IotHistory.instance.getHistory()
+
+  return e.reply({ status: 200, message: '', data: history })
+})
+
+
+regist(RequestType.CLEAR_HISTORY, (e: any) => {
+  IotHistory.instance.clearHistory()
+  return e.reply({ status: 200, message: '', data: [] })
+})

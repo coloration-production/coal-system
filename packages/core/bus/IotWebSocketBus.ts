@@ -40,7 +40,7 @@ export class IotWebSocketBus extends IotBus {
     })
 
     this.#ws.on('close', () => {
-      this.status = IotTerminalStatus.offine
+      this.status = IotTerminalStatus.offline
     })
 
     this.#ws.on('message', (data: ArrayBuffer) => {
@@ -64,7 +64,7 @@ export class IotWebSocketBus extends IotBus {
       clearInterval(this.#timer)
       this.clients.forEach(cl => cl.unmount())
       this.#ws = null
-      this.status = IotTerminalStatus.offine
+      this.status = IotTerminalStatus.offline
 
     }
   }
