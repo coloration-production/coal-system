@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { watch, ref, watchEffect } from 'vue'
+import { watch, ref, watchEffect, PropType } from 'vue'
 import { init } from 'echarts'
 const props = defineProps({
   value: {
-    type: Array
+    type: Array as PropType<number[]>
   },
   category: {
-    type: Array
+    type: Array as PropType<string[]>
   },
   color: {
     type: Array,
@@ -15,6 +15,9 @@ const props = defineProps({
   areaColor: {
     type: Array,
     default: ['#e0e7ff'],
+  },
+  max: {
+    type: Number
   }
 })
 
@@ -36,6 +39,8 @@ watch([
   ], () => {
 
   if (!chart.value || !props.value || !props.category) return
+
+  const max = props.max || Math.max(...props.value) * 1.2
   setTimeout(() => {
     chart.value.setOption(Object.assign({
       grid: {
@@ -53,7 +58,8 @@ watch([
       },
       yAxis: {
         type: 'value',
-        show: false
+        show: false,
+        max: max
       },
     
       series: [

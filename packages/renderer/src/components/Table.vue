@@ -73,7 +73,7 @@ export default defineComponent({
               :i="i"
               name="table-row"
             >
-              <tr>
+              <tr class="border-b border-gray-200">
                 <td
                   v-for="(col, j) in columns"
                   :key="j"

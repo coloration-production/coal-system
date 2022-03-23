@@ -36,9 +36,17 @@ function handleClearHistory () {
 </script>
 <template>
 <IPage title="历史记录">
+  <template #header-rest>
+    <div class="flex-1 ml-4">
+      <IHangText size="md">History Record</IHangText>
+    </div>
+  </template>
   <ICard title="近30天报警记录">
     <template v-slot:header-rest>
-      <IButton color="red" @click="(toggleConfirmVisible as any)">清除记录</IButton>
+      <div class="flex flex-1 justify-between items-end ml-2">
+        <IHangText>History Record</IHangText>
+        <IButton color="red" @click="(toggleConfirmVisible as any)">清除记录</IButton>
+      </div>
     </template>
     <Table 
       :columns="columns"

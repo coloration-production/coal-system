@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { IPage, ICard, ITitle, IBadge, IText, IHangText, IButtonText } from '@coloration/island'
+import { IPage, ICard, ITitle, IBadge, IText, IHangText, IButtonText, IPrueBadge } from '@coloration/island'
 import { computed, ComputedRef } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -21,31 +21,59 @@ function clearHistory () {
 </script>
 <template>
 <IPage title="数据概览">
+  <template #header-rest>
+    <div class="ml-4 flex-1">
+      <IHangText size="md">Insight Overview</IHangText>
+    </div>
+  </template>
   <div>
     <div class="grid grid-cols-12 gap-6">
       <div class="col-span-full">
         <ICard title="设备实时状态">
-          <div class="grid grid-cols-12 m-4 border-gary-100">
-            <div v-for="cl in mod.clients" class="xl:col-span-1 md:col-span-3 lg:col-span-2 col-span-4 h-10 border-b border-gary-100 relative">
-              
-              <div 
-                class="absolute left-0 top-0 bottom-0 transition-all" 
-                :class="{ 
-                  'bg-gray-100': cl.status === IotTerminalStatus.offline,
-                  'bg-indigo-100': cl.status === IotTerminalStatus.normal,
-                  'bg-red-100': cl.status === IotTerminalStatus.abnormal,
-                }"
-                :style="{
-                  width: (cl.value / mod.warning) * 100 + '%'
-                }"
-              ></div>
-              <div class="absolute inset-0 flex items-center justify-between px-2">
-                <IText size="sm" class="text-gray-700">
-                  {{ cl.name }}
-                </IText>
-                <IText size="xs" class="text-gray-700">
-                  {{ cl.valueString }}
-                </IText>
+          <template #header-rest>
+            <div class="flex-1 ml-2">
+              <IHangText>Real time status of equipment</IHangText>
+            </div>
+          </template>
+
+          <div class="pt-4 pb-6">
+            <div v-for="(bus, i) in mod.buses" :key="i">
+              <div class="mx-4">
+                <IHangText>
+                  {{ bus.name }}
+                </IHangText>
+              </div>
+              <div class="grid grid-cols-12 mx-4 border-gary-100">
+                <div v-for="cl in bus.clients" class=" lg:col-span-2 md:col-span-3 col-span-4 h-10 border-b border-gary-100 relative">
+                  
+                  <div 
+                    class="absolute left-0 top-0 bottom-0 transition-all" 
+                    :class="{ 
+                      'bg-gray-100': cl.status === IotTerminalStatus.offline,
+                      'bg-indigo-100': cl.status === IotTerminalStatus.normal,
+                      'bg-red-100': cl.status === IotTerminalStatus.abnormal,
+                    }"
+                    :style="{
+                      width: (cl.value / mod.warning) * 100 + '%'
+                    }"
+                  ></div>
+                  <div class="absolute inset-0 flex items-center justify-between px-2">
+                    <IText size="xs" class="text-gray-700">
+                      {{ cl.name }}
+                    </IText>
+                    <IText 
+                      size="xs" 
+                      class="text-gray-700 font-semibold"
+                      :class="{ 
+                        'text-gray-700': cl.status === IotTerminalStatus.offline,
+                        'text-indigo-700': cl.status === IotTerminalStatus.normal,
+                        'text-red-700': cl.status === IotTerminalStatus.abnormal,
+                      }"
+                      >
+                      {{ cl.valueString }}
+                    </IText>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -53,29 +81,44 @@ function clearHistory () {
       </div>
       <div class="col-span-full xl:col-span-8">
         <ICard title="粉尘">
+          <template #header-rest>
+            <div class="flex-1 ml-2">
+              <IHangText>Dust</IHangText>
+            </div>
+          </template>
           <div class="flex bg-white rounded-sm">
             <div class="flex flex-col flex-1">
               <div class="px-5 pt-5">
                 <IHangText>最大值{{timeSuffix}}</IHangText>
                 <div class="flex items-start">
-                  <div class="text-3xl font-bold text-gray-800 mr-2">{{ mod.max.toFixed(2) }} {{ mod.unit }}</div>
+                  <div class="text-3xl font-bold text-gray-800 mr-2">
+                    {{ mod.max.toFixed(2) }} 
+                    <IPrueBadge color="green">
+                      {{ mod.unit }}
+                    </IPrueBadge>
+                  </div>
                 </div>
               </div>
               <!-- Chart built with Chart.js 3 -->
               <div class="flex-grow pb-8">
-                <Chart :value="allMaxs" :category="[]" class="h-40" />
+                <Chart :value="allMaxs" :category="[]" :max="mod.warning * 1.2" class="h-40" />
               </div>
             </div>
             <div class="flex flex-col flex-1">
               <div class="px-5 pt-5">
                 <IHangText>平均值{{timeSuffix}}</IHangText>
                 <div class="flex items-start">
-                  <div class="text-3xl font-bold text-gray-800 mr-2">{{ mod.average.toFixed(2) }} {{ mod.unit }}</div>
+                  <div class="text-3xl font-bold text-gray-800 mr-2">
+                    {{ mod.average.toFixed(2) }} 
+                    <IPrueBadge color="green">
+                      {{ mod.unit }}
+                    </IPrueBadge>
+                  </div>
                 </div>
               </div>
               <!-- Chart built with Chart.js 3 -->
               <div class="flex-grow pb-8">
-                <Chart :value="allAverages" :category="[]"  class="h-40" />
+                <Chart :value="allAverages" :category="[]"  :max="mod.warning * 1.2"  class="h-40" />
               </div>
             </div>
           </div>
@@ -84,10 +127,13 @@ function clearHistory () {
       <div class="col-span-full xl:col-span-4 min-h-92">
         <ICard 
           title="报警记录"
-          
         >
+
           <template v-slot:header-rest>
-            <IButtonText @click="clearHistory">清除</IButtonText>
+            <div class="flex-1 ml-2 flex justify-between items-center">
+              <IHangText>Record</IHangText>
+              <IButtonText @click="clearHistory">清除</IButtonText>
+            </div>
           </template>
           <Table
              class="h-24"
@@ -118,6 +164,11 @@ function clearHistory () {
       </div>
       <div class="col-span-6 xl:col-span-6">
         <ICard title="设备信号状态">
+          <template #header-rest>
+            <div class="flex-1 ml-2">
+              <IHangText>Client signal status</IHangText>
+            </div>
+          </template>
           <div class="flex justify-between px-5 py-6 items-center">
             <ITitle :level="3">在线数量</ITitle>
             <IBadge color="indigo">
@@ -146,6 +197,11 @@ function clearHistory () {
       </div>
       <div class="col-span-6 xl:col-span-6">
         <ICard title="通道信号状态">
+          <template #header-rest>
+            <div class="flex-1 ml-2">
+              <IHangText>Bus signal status</IHangText>
+            </div>
+          </template>
           <div class="flex justify-between px-5 py-6 items-center">
             <ITitle :level="3">在线数量</ITitle>
             <IBadge color="indigo">

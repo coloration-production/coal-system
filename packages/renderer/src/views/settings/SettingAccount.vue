@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { IPage, ICard, ITitle, IText, ILabel, IInput, IFlexRow, ILine, ILayout, IButton } from '@coloration/island'
+import { IPage, ICard, ITitle, IText, ILabel, IInput, IFlexRow, ILine, ILayout, IButton, IHangText } from '@coloration/island'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -51,6 +51,12 @@ function handleReset () {
 </script>
 <template>
 <IPage title="账号设置">
+  <template #header-rest>
+    <div class="ml-4 flex-1">
+      <IHangText size="md">Account Setting</IHangText>
+    </div>
+  </template>
+
   <ICard>
     <ILayout class="px-6 py-6">
       <ITitle :level="3" class="mb-2">修改密码</ITitle>

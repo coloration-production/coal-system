@@ -1,24 +1,36 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useStore } from 'vuex'
-import { ClientStatus, IpcType } from '../../types'
-import { exportConfigFile, startModule } from './api'
-import { ILayout, IModal, ITitle, IText, IBadge } from '@coloration/island'
+import { IpcType } from '../../types'
+import { startModule } from './api'
+import { ILayout, IModal, ITitle, IText, IBadge, IHangText } from '@coloration/island'
 import { useToggle } from '@vueuse/core'
 
 const store = useStore()
-const connectPools: WebSocket[] = []
 const [warningVisible, toggleWarningVisible] = useToggle(false)
 const warningData = ref<any>({})
+const warningBellDom = ref<HTMLAudioElement | null>(null)
+
+
+
 function reset () {
   return new Promise((resolve, reject) => {
-    connectPools.map(ws => ws.close())
     resolve('')
   })
 }
 
+function playWarningAudio () {
+  warningBellDom.value?.play()
+}
+
+function handleModalClose () {
+  warningBellDom.value?.pause()
+  toggleWarningVisible(false)
+}
+
 function warn (data: any) {
   warningData.value = data
+  playWarningAudio()
   toggleWarningVisible(true)
 }
 
@@ -32,7 +44,7 @@ function init () {
 
   window.ipcRenderer.on(IpcType.IOT_WARNING, (event, data) => {
     console.log('warning', data)
-    // warn(data)
+    warn(data)
     store.dispatch('updateWarningHistory', data)
   })
 
@@ -48,11 +60,12 @@ onMounted(() => {
 <template>
 <ILayout>
   <router-view />
+  <audio id="warning-bell" loop ref="warningBellDom" src="/warning.mp3" />
   <IModal 
     title="警告"
     :visible="warningVisible" 
-    @close="toggleWarningVisible"
-    @confirm="toggleWarningVisible">
+    @close="handleModalClose"
+    @confirm="handleModalClose">
     <div class="mb-2">
       <ITitle :level="3" class="mb-2">
         报警时间
