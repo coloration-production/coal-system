@@ -4,6 +4,7 @@ import { ref, onMounted, onUnmounted, watch, PropType } from 'vue'
 import { useRouter } from 'vue-router'
 import SidebarLinkGroup from './SidebarLinkGroup.vue'
 import { IFlexRow, IDirectionIcon, IArrowIcon } from '@coloration/island'
+import { useBrowserLocation } from '@vueuse/core';
 
 const props = defineProps({
   sidebarOpen: {
@@ -13,6 +14,9 @@ const props = defineProps({
   options: {
     type: Array as PropType<any[]>,
     default: []
+  },
+  activePath: {
+    type: String as PropType<string>
   }
 })
 
@@ -27,6 +31,7 @@ const storedSidebarExpanded = localStorage.getItem('sidebar-expanded')
 const sidebarExpanded = ref(storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true')
 
 const currentRoute = useRouter().currentRoute
+const loc = useBrowserLocation()
 
 // close on click outside
 const clickHandler = ({ target }: Event) => {
@@ -63,6 +68,10 @@ watch(sidebarExpanded, () => {
     document.querySelector('body')?.classList.remove('sidebar-expanded')
   }
 })
+
+function includeSubOpt (options: any[]) {
+  return options.some((opt) => opt.value === currentRoute.value.fullPath)
+}
 </script>
 <template>
   <div 
@@ -128,7 +137,7 @@ watch(sidebarExpanded, () => {
               <SidebarLinkGroup 
                 v-if="Array.isArray(optChild.value)"
                 v-slot="parentLink" 
-                :activeCondition="currentRoute.fullPath.includes(optChild.name)">
+                :activeCondition="includeSubOpt(optChild.value)">
                 <a 
                   class="i-sidebar-nav-link" 
                   :class="parentLink.expanded && 'hover:text-gray-200'" 
@@ -142,9 +151,6 @@ watch(sidebarExpanded, () => {
                     </IFlexRow>
                     <div class="flex shrink-0 ml-2">
                       <IDirectionIcon class="text-xs text-gray-400" :direction="parentLink.expanded ? 'up' : 'down'" />
-                      <!-- <svg class="w-3 h-3 shrink-0 ml-1 fill-current text-gray-400" :class="parentLink.expanded && 'transform rotate-180'" viewBox="0 0 12 12">
-                        <path d="M5.9 11.4L.5 6l1.4-1.4 4 4 4-4L11.3 6z" />
-                      </svg> -->
                     </div>
                   </IFlexRow>
                 </a>
@@ -157,6 +163,7 @@ watch(sidebarExpanded, () => {
                     </li>
                   </router-link>
                 </ul>
+                {{ currentRoute.fullPath }} {{ loc.state.current }}
               </SidebarLinkGroup>
               <router-link v-else :to="optChild.value" custom v-slot="{ href, navigate, isExactActive }">
                 <li class="px-3 py-2 rounded-sm mb-0.5 last:mb-0" :class="isExactActive && 'bg-gray-900'">

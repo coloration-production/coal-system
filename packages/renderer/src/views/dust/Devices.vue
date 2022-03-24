@@ -17,7 +17,7 @@ const columns = [
 
 const store = useStore()
 
-const items = computed(() => store.getters.dustClients)
+const items = computed(() => [])
 
 function calcColor (status: ClientStatus) {
   switch (status) {
@@ -42,50 +42,7 @@ function calcAreaColor (status: ClientStatus) {
 <template>
 <IPage title="节点列表">
   <ICard :title="`全部 控制设备 ${items.length}`">
-    <div class="md:flex">
-      <Table
-        :columns="columns"
-        :items="items.slice(0, items.length / 2)"
-        class="md:w-1/2"
-      >
-        <template #table-col-status="{ item }">
-          <StatusBadge :status="item.status" :value="item.value" />
-        </template>
-
-        <template #table-col-trend="{ item }">
-          <div class="md:w-40 lg:w-60 xl:w-70">
-            <Chart 
-              :value="item.trend" 
-              :category="[]" 
-              class="h-6" 
-              :color="[calcColor(item.status)]"
-              :areaColor="[calcAreaColor(item.status)]"
-            />
-          </div>
-        </template>
-      </Table>
-      <Table
-        :columns="columns"
-        :items="items.slice(items.length / 2)"
-        class="text-xs md:w-1/2"
-      >
-        <template #table-col-status="{ item }">
-          <StatusBadge :status="item.status" :value="item.value" />
-        </template>
-
-        <template #table-col-trend="{ item }">
-          <div class="md:w-40 lg:w-60 xl:w-70">
-            <Chart 
-              :value="item.trend" 
-              :category="[]" 
-              class="h-6" 
-              :color="[calcColor(item.status)]"
-              :areaColor="[calcAreaColor(item.status)]"
-            />
-          </div>
-        </template>
-      </Table>
-    </div>
+    
   </ICard>
 </IPage>
 </template>

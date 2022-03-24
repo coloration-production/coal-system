@@ -20,7 +20,7 @@ function calStatus(s: number) {
   }
 }
 
-const items = computed<DustNodeDto[]>(() => store.getters.dustNodes)
+const items = computed<DustNodeDto[]>(() => [])
 
 watch(items, () => {
   descVisibleSigns.value = items.value.map(() => true)
@@ -50,58 +50,6 @@ const subColumns = [
     <template v-slot:header-rest>
       <IPlusButton type="primary">控制线路</IPlusButton>
     </template>
-    
-
-    <Table 
-      :columns="columns"
-      :items="items">
-      
-      <template #table-row="{ item, i }">
-        <tr>
-          <td
-            class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
-          >
-            {{ item.id }}
-          </td>
-          <td
-            class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
-          >
-            {{ item.uri }}
-          </td>
-          <td
-            class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
-          >
-            <StatusBadge :status="item.status" />
-          </td>
-          <td
-            class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
-          >
-            {{ item.clients.length }}
-          </td>
-          <td
-            class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap"
-          >
-            <div class="flex text-gray-400 select-none">
-              <IDirectionIcon @click="descVisibleSigns[i] = !descVisibleSigns[i]" />
-              
-            </div>
-          </td>
-        </tr>
-        <tr :class="descVisibleSigns[i] ? '' : 'hidden' ">
-          <td colspan="1000" class="px-2 first:pl-5 last:pr-5 py-3 whitespace-nowrap bg-gray-100">
-            <Table
-              :columns="subColumns"
-              :items="item.clients"
-            >
-              <template #table-col-status="{ item: subItem, j}">
-              
-                <StatusBadge :status="subItem.status" :value="subItem.value" />
-              </template>
-            </Table>
-          </td>
-        </tr>
-      </template>
-    </Table>  
   </ICard>
 </IPage>
 </template>
