@@ -1,20 +1,25 @@
 {
   "signal": "ws",
-  "unit": "mg",
+  "unit": "",
   "protocol": "rs485",
   "readInterval": 2,
-  "readCommand": "0300000002",
+  "readCommand": "",
   "calcRatio": 0.1,
   "calcOffset": 0,
-  "warning": 23,
+  "warning": 20000,
   "fixcount": 2,
   "buses": [
     {
       "name": "线路1",
       "uri": "192.168.0.7:6432",
       "clients": [
-        { "address": 1, "name": "前部1" },
-        { "address": 1, "name": "左部1" }
+        {
+          "address": 1,
+          "unit": "摄氏度",
+          "warning": 24,
+          "readCommand": "0300000001",
+          "name": "温度传感器1"
+        }
       ]
     }
   ]

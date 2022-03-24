@@ -4,6 +4,7 @@ import {
   Insight,
   SettingFeature,
   SettingAccount,
+  SettingPayload,
   DustDevices,
   DustManage,
   History,
@@ -22,6 +23,7 @@ const routes:RouteRecordRaw[] = [
       { path: 'history', component: History },
       { path: 'setting-feature', component: SettingFeature },
       { path: 'setting-account', component: SettingAccount },
+      { path: 'setting-payload', component: SettingPayload },
     ]
   },
   { 

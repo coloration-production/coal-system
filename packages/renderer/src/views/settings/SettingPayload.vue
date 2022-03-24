@@ -1,5 +1,5 @@
 D<script lang="ts" setup>
-import { IPage, ICard, ITitle, ILayout, IText, IButton, IHangText, IFlexRow, IModal, ILine, ILabel, IInput, ISelect } from '@coloration/island'
+import { IPage, ICard, ITitle, ILayout, IText, IButton, IHangText, IFlexRow, IModal, ILabel, IInput } from '@coloration/island'
 import { onMounted, ref } from 'vue';
 import { exportConfigFile, importConfigFile, resetConfigFile } from '../../api'
 import { useToggle } from '@vueuse/core'
@@ -9,8 +9,7 @@ const editable = ref<boolean>(false)
 const codeBox = ref()
 const [resetVisible, toggleResetVisible] = useToggle(false)
 const [modifyVisible, toggleModifyVisible] = useToggle(false)
-const currentBus = ref<string>('')
-const currentCommand = ref<string>('')
+
 onMounted(() => {
   updateConfigDisplay()
 })
@@ -52,51 +51,17 @@ function handleReset () {
   })
 }
 
-function sendCommand (uri: string, command: string) {
-  console.log(uri, command)
-}
-
-</script> 
+</script>
 <template>
-<IPage title="系统设置">
+<IPage title="参数设置">
   <template #header-rest>
     <div class="ml-4 flex-1">
-      <IHangText size="md">System Setting</IHangText>
+      <IHangText size="md">Payload Setting</IHangText>
     </div>
   </template>
   <ICard>
     <ILayout class="px-6 py-6">
-      <div>
-        <ITitle :level="3" class="mb-2">命令</ITitle>
-
-        <IFlexRow vertical="start" class="gap-4">
-          <ISelect class="w-32" v-model="currentBus">
-            <option v-for="bus in configData.buses" :value="bus.uri">{{ bus.name }}</option>
-          </ISelect>
-          <ISelect class="w-32" v-model="currentBus">
-            <option value="">温度传感器1</option>
-            <option value="">粉尘传感器1</option>
-          </ISelect>
-          <ISelect class="w-32">
-            <option value="">低报</option>
-            <option value="">更换地址</option>
-            <option value="">修改单位</option>
-          </ISelect>
-          <IInput class="w-40" v-model="currentCommand" />
-          <IButton @click="sendCommand(currentBus, currentCommand)">发送</IButton>
-        </IFlexRow>
-      </div>
-
-      <ILine class="mb-10 mt-6" />
-      <ITitle :level="3" class="mb-2">配置</ITitle>
-      <IText size="sm" class="mb-4">查看和配置源文件</IText>
-
-      <div class="border-2 p-2 rounded mb-4" :class="editable ? 'bg-gray-200 border-gray-600' : 'bg-gray-100 border-gray-100'">
-<pre :contenteditable="editable" ref="codeBox">
-{{ configData }}
-</pre>
-      </div>
-
+      <ILabel></ILabel>
       <IFlexRow horizontal="between">
         <div>
           <IButton v-if="!editable" color="red" @click="(toggleResetVisible as any)" class="mr-2">重置</IButton>

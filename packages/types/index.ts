@@ -64,7 +64,8 @@ export enum RequestType {
 
   START_MODULE,
   READ_HISTORY,
-  CLEAR_HISTORY
+  CLEAR_HISTORY,
+  SEND_COMMAND
 }
 
 export enum IotNodeSignal {

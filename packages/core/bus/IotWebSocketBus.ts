@@ -6,9 +6,10 @@ import { IotModule } from '../IotModule'
 
 export class IotWebSocketBus extends IotBus {
   
-  #ws: WebSocket | null = null
+  ws: WebSocket | null = null
   #timer: number = 0
   clients: IotClient[] = []
+  sendQueue: { key: string, data: ArrayBuffer }[] = []
 
   constructor (
     options: any, 
@@ -27,48 +28,64 @@ export class IotWebSocketBus extends IotBus {
   }
 
   mount (): void {
-    if (this.#ws) this.unmount() 
-    this.#ws = new WebSocket(`ws://${this.uri}`)
-    this.#ws.binaryType = 'arraybuffer'
-
-    this.#ws.on('open', () => {
-      console.log('connected:', this.uri)
-      this.status = IotTerminalStatus.normal
-      this.clients.forEach(cl => {
-        cl.mount()
-      })
-    })
-
-    this.#ws.on('close', () => {
-      this.status = IotTerminalStatus.offline
-    })
-
-    this.#ws.on('message', (data: ArrayBuffer) => {
+    if (this.ws) this.unmount() 
+    this.status = IotTerminalStatus.normal
+    const socket = new WebSocket(`ws://${this.uri}`)
+    socket.binaryType = 'arraybuffer'
+    this.ws = socket
+    let receiving = false
+    this.#timer = setInterval(() => {
+      if (receiving) return
+      if (this.sendQueue.length !== 0) {
+        setTimeout(() => {
+          const next = this.sendQueue.shift()
+          if (next) socket.send(next.data)
+        }, 100)
+      }
+    }, 100) as any
+    socket.on('message', (data: ArrayBuffer) => {
+      console.log('callback', data)
+      receiving = true
       const response = Buffer.from(data)
       Promise.all(this.clients.map((cl) => cl.handler(response)))
       .then(() => {
-        // 
+        this.mod?.tick()
+        receiving = false
       })
-
     })
 
-    this.#ws.on('error', (err) => {
-      console.log('connect failed', err)
+    socket.on('error', (err) => {
+      console.log(err)
     })
 
+    socket.on('open', () => {
+      this.clients.forEach((cl, i) => {
+        setTimeout(() => {
+          cl.mount()
+        }, (0))
+      })
+    })
   }
 
   unmount(): void {
-    if (this.#ws) {
-      this.#ws.close()
-      clearInterval(this.#timer)
+    if (this.ws) {
       this.clients.forEach(cl => cl.unmount())
-      this.#ws = null
+      clearInterval(this.#timer)
+      this.sendQueue = []
+      this.ws.close()
+      this.ws = null
       this.status = IotTerminalStatus.offline
-
     }
   }
-  send (data: ArrayBuffer): void {
-    this.#ws?.send(data)
+  send (d: { key: string, data: ArrayBuffer }): void {
+    // this.ws!.send(data)
+
+    let item = this.sendQueue.find(item => item.key === d.key)
+    if (item) {
+      item.data = d.data
+    }
+    else {
+      this.sendQueue.push(d)
+    }
   }
 }

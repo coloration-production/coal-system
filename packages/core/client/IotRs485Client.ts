@@ -1,7 +1,6 @@
 import { IotClient } from './IotClient'
 import { formatNumberAddressToHex, suffixCrc } from '../util'
 import { IotTerminalStatus } from '../type'
-import { IotWebSocketBus } from '../bus/IotWebSocketBus'
 import { IotBus } from '../bus/IotBus'
 
 export class IotRs485Client extends IotClient {
@@ -22,7 +21,6 @@ export class IotRs485Client extends IotClient {
       !this.bus 
       || this.bus.status !== IotTerminalStatus.normal
     ) return
-    
     clearInterval(this.#timer)
     // 11 => 0A
     const hexAddress = formatNumberAddressToHex(this.#address)
@@ -32,9 +30,8 @@ export class IotRs485Client extends IotClient {
     
     // string -> arrayBuffer
     const readBuffer = Buffer.from(readBufferString, 'hex')
-
     this.#timer = setInterval(() => {
-      this.bus?.send(readBuffer)
+      this.bus?.send({ key: hexAddress, data: readBuffer })
     }, this.interval) as any
 
     super.mount()
@@ -48,7 +45,9 @@ export class IotRs485Client extends IotClient {
   handler (response: Buffer) {
     if (this.#address !== response[0]) return Promise.resolve()
     const resCommand = response[1]
-    const responseData = response.slice(3, 3 + response[3])
+    const dataLength = response[2]
+    if (response.length !== dataLength + 5) return Promise.resolve()
+    const responseData = response.slice(3, 3 + dataLength)
     if (parseInt(this.#readCommand.slice(0, 2)) === resCommand) {
       this.handleRead(responseData)
     }
@@ -57,9 +56,8 @@ export class IotRs485Client extends IotClient {
   }
 
   handleRead (data: Buffer) {
-    const value = data.reduceRight((acc: number, current: number, i: number) => {
-      acc += current * Math.pow(256, i)
-      return acc
+    const value = data.reduce((acc: number, current: number, i: number) => {
+      return acc * Math.pow(256, i) + current
     }, 0)
 
     this.value = Number(this.clacValue(value))

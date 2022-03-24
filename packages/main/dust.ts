@@ -45,8 +45,8 @@ regist(RequestType.RESET_CONFIG_FILE, (e: any) => {
 regist(RequestType.START_MODULE, (e: any) => {
   const conf: any = dustStore.get(DUST_CONFIG_STORE_KEY)
 
-  conf.signal = ''
-  conf.protocol = ''
+  // conf.signal = ''
+  // conf.protocol = ''
 
   const sys = IotModule.instance
   sys.unmount()
@@ -97,5 +97,10 @@ regist(RequestType.READ_HISTORY, (e: any) => {
 
 regist(RequestType.CLEAR_HISTORY, (e: any) => {
   IotHistory.instance.clearHistory()
+  return e.reply({ status: 200, message: '', data: [] })
+})
+
+regist(RequestType.SEND_COMMAND, (e: any, data: any) => {
+  IotModule.instance.sendCommand(data.uri, data.data)
   return e.reply({ status: 200, message: '', data: [] })
 })

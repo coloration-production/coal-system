@@ -180,6 +180,12 @@ export class IotModule {
     this.cb?.(this.getJSONData())
   }
 
+  sendCommand (uri: string, data: any) {
+    const bus = this.#buses.find(bus => bus.uri === uri)
+
+    bus?.send(data)
+  }
+
   unmount () {
     this.#buses.forEach(n => n.unmount())
   }

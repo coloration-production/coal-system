@@ -39,3 +39,7 @@ export function getHistory () {
 export function clearHistory () {
   return request(RequestType.CLEAR_HISTORY)
 }
+
+export function sendCommand (uri: string, data: any) {
+  return request(RequestType.SEND_COMMAND, { uri, data })
+}
