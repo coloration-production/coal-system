@@ -128,7 +128,7 @@ onMounted(() => {
               :value="cmd.value">{{ cmd.name }}</option>
           </ISelect>
           <IInput class="w-40" v-model="currentPayload" />
-          <IButton @click="sendCommandToBus">发送</IButton>
+          <IButton @click="sendCommandToBus" type="primary">发送</IButton>
         </IFlexRow>
       </div>
 

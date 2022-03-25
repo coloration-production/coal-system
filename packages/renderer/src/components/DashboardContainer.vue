@@ -15,10 +15,7 @@ const options = [
   ] },
   { name: '系统', value: [
     { name: '账号设置', value: '/dashboard/setting-account', icon: IUsergroupIcon }, 
-    { name: '功能设置', icon: IDotsIcon, value: [
-      { name: '系统设置', value: '/dashboard/setting-feature' },
-      { name: '参数设置', value: '/dashboard/setting-payload' },
-    ] }, 
+    { name: '功能设置', icon: IDotsIcon, value: '/dashboard/setting-feature' }, 
   ]}
 ]
 

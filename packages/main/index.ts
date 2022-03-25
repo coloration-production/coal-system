@@ -3,6 +3,7 @@ import { release } from 'os'
 import { join } from 'path'
 import './auth'
 import './dust'
+import config from '../config.json'
 
 const windowWidth = 1600
 const windowHeight = 1000
@@ -29,7 +30,7 @@ let win: BrowserWindow | null = null
 
 async function createWindow() {
   win = new BrowserWindow({
-    title: '粉尘信号管理系统',
+    title: config.app,
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs')
     },

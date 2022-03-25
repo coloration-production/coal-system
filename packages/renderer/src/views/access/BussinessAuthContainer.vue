@@ -17,7 +17,7 @@
 
       <!-- Image -->
       <div class="hidden md:block absolute top-0 bottom-0 right-0 md:w-1/2" aria-hidden="true">
-        <video autoplay loop class="w-full h-full" src="/login.mp4" />
+        <video autoplay loop class="w-full h-full object-cover opacity-80" src="/login.mp4" />
         <!--
         <img class="object-cover object-center w-full h-full" src="../../assets/cover.jpg" width="760" height="1024" alt="Authentication" />
         -->

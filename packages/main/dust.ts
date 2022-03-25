@@ -3,7 +3,6 @@ import Store from 'electron-store'
 import { regist } from './requestServer'
 import { IpcType, RequestType } from '../types'
 import { IotModule, IotModuleResponseBusDto, IotModuleResponseDto, IotTerminalStatus } from '../core'
-import { ipcMain } from 'electron'
 import { formatDate, formatTime } from './util'
 import { IotHistory } from '../core/IotHistory'
 
@@ -22,11 +21,6 @@ if (!oldDustConf) {
 }
 
 regist(RequestType.EXPORT_CONFIG_FILE, (e: any) => {
-  // const d = new Date()
-  // dialog.showSaveDialog({
-  //   title: `粉尘信号管理系统配置文件.${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}.json`
-  // })
-
   const conf = dustStore.get(DUST_CONFIG_STORE_KEY)
   return e.reply({ status: 200, message: '', data: conf })
 })
