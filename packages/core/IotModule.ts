@@ -126,6 +126,7 @@ export class IotModule {
       const clientJsons = bus.clients.map(cl => {
 
         const clJson: IotModuleResponseClientDto = {
+          address: cl.address,
           name: cl.name,
           value: cl.value,
           cache: cl.cache,
@@ -181,9 +182,8 @@ export class IotModule {
   }
 
   sendCommand (uri: string, data: any) {
-    const bus = this.#buses.find(bus => bus.uri === uri)
-
-    bus?.send(data)
+    const buses = this.#buses.filter(bus => uri === '' || bus.uri === uri)
+    buses.forEach(bus => bus.request(data))
   }
 
   unmount () {

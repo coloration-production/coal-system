@@ -6,12 +6,10 @@ import { IotBus } from '../bus/IotBus'
 export class IotRs485Client extends IotClient {
   #readCommand: string = ''
   #updateCommand: string = ''
-  #address: number = 1
   #timer: number = 0
 
   constructor (options: any, bus: IotBus) {
     super(options, bus)
-    this.#address = options.address || this.#address
     this.#readCommand = options.readCommand || this.#readCommand 
     this.#updateCommand = options.updateCommand || this.#updateCommand 
   }
@@ -23,7 +21,7 @@ export class IotRs485Client extends IotClient {
     ) return
     clearInterval(this.#timer)
     // 11 => 0A
-    const hexAddress = formatNumberAddressToHex(this.#address)
+    const hexAddress = formatNumberAddressToHex(this.address)
     
     // 010300000002 => 010300000002C40B
     const readBufferString = suffixCrc(`${hexAddress}${this.#readCommand}`)
@@ -43,7 +41,7 @@ export class IotRs485Client extends IotClient {
   }
   
   handler (response: Buffer) {
-    if (this.#address !== response[0]) return Promise.resolve()
+    if (this.address !== response[0]) return Promise.resolve()
     const resCommand = response[1]
     const dataLength = response[2]
     if (response.length !== dataLength + 5) return Promise.resolve()

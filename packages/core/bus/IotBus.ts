@@ -45,7 +45,10 @@ export class IotBus {
   }
 
   send (data: any) {
-    console.log('4/0')
+  }
+
+  request(data: any) {
+    return Promise.resolve()
   }
 }
 

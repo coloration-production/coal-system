@@ -4,7 +4,7 @@
   "protocol": "rs485",
   "readInterval": 2,
   "readCommand": "",
-  "calcRatio": 0.1,
+  "calcRatio": 1,
   "calcOffset": 0,
   "warning": 20000,
   "fixcount": 2,
@@ -17,8 +17,17 @@
           "address": 1,
           "unit": "摄氏度",
           "warning": 24,
+          "calcRatio": 0.1,
           "readCommand": "0300000001",
           "name": "温度传感器1"
+        },
+        {
+          "address": 2,
+          "unit": "ug/m^3",
+          "warning": 300,
+          "calcRatio": 1,
+          "readCommand": "0300000001",
+          "name": "粉尘传感器1"
         }
       ]
     }

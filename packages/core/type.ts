@@ -24,6 +24,7 @@ export interface IotModuleResponseBusDto {
 }
 
 export interface IotModuleResponseClientDto {
+  address: number,
   name: string,
   value: number,
   cache: number[],

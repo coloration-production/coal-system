@@ -1,24 +1,46 @@
 D<script lang="ts" setup>
 import { IPage, ICard, ITitle, ILayout, IText, IButton, IHangText, IFlexRow, IModal, ILine, ILabel, IInput, ISelect } from '@coloration/island'
-import { onMounted, ref } from 'vue';
-import { exportConfigFile, importConfigFile, resetConfigFile } from '../../api'
+import { onMounted, ref } from 'vue'
+import { exportConfigFile, importConfigFile, resetConfigFile, sendCommand } from '../../api'
 import { useToggle } from '@vueuse/core'
+import { IotModuleResponseBusDto, IotModuleResponseClientDto, IotModuleResponseDto } from 'packages/core'
+import { suffixCrc, numberPrefix, bufferFromHex } from '../../../../core'
+import { PlainObject } from '@coloration/kit'
 
-const configData = ref<any>({})
+const configData = ref<IotModuleResponseDto | undefined>()
 const editable = ref<boolean>(false)
 const codeBox = ref()
 const [resetVisible, toggleResetVisible] = useToggle(false)
 const [modifyVisible, toggleModifyVisible] = useToggle(false)
+
+const clientOptions = ref<IotModuleResponseClientDto[]>([])
+const commandOptions = ref<PlainObject[]>([
+  { name: '修改地址', value: '060064' },
+])
+
 const currentBus = ref<string>('')
-const currentCommand = ref<string>('')
-onMounted(() => {
-  updateConfigDisplay()
-})
+const currentCommand = ref<string>(commandOptions.value[0].value)
+const currentClient = ref<number>(-1)
+const currentPayload = ref<string>('')
+
+
+const busOptions = ref<IotModuleResponseBusDto[]>([])
+
 
 function updateConfigDisplay () {
   exportConfigFile()
   .then((res: any) => {
     configData.value = res.data
+    busOptions.value = configData.value?.buses || []
+    if (configData.value && configData.value.buses.length > 0) {
+      const defaultBus = configData.value.buses[0]
+      currentBus.value = defaultBus.uri
+      clientOptions.value = defaultBus.clients || []
+      if (defaultBus.clients.length > 0) {
+        currentClient.value = defaultBus.clients[0].address
+      }
+      
+    }
   })
 }
 
@@ -52,9 +74,30 @@ function handleReset () {
   })
 }
 
-function sendCommand (uri: string, command: string) {
-  console.log(uri, command)
+function sendCommandToBus () {
+  console.log(
+    currentBus.value, 
+    currentClient.value,
+    currentCommand.value,
+    currentPayload.value,
+  )
+
+  let value = Number(currentPayload.value).toString(16)
+  value = numberPrefix(0, 4, value)
+  let hexAddress = currentClient.value.toString(16)
+  hexAddress = hexAddress.length === 1 ? '0' + hexAddress : hexAddress
+  const str = suffixCrc(`${hexAddress}${currentCommand.value}${value}`)
+  
+  console.log(str)
+  sendCommand(currentBus.value, { key: currentCommand.value, data: bufferFromHex(str) })
+
 }
+
+onMounted(() => {
+  updateConfigDisplay()
+})
+
+
 
 </script> 
 <template>
@@ -68,22 +111,24 @@ function sendCommand (uri: string, command: string) {
     <ILayout class="px-6 py-6">
       <div>
         <ITitle :level="3" class="mb-2">命令</ITitle>
-
         <IFlexRow vertical="start" class="gap-4">
           <ISelect class="w-32" v-model="currentBus">
-            <option v-for="bus in configData.buses" :value="bus.uri">{{ bus.name }}</option>
+            <option 
+              v-for="bus in busOptions" 
+              :value="bus.uri">{{ bus.name }}</option>
           </ISelect>
-          <ISelect class="w-32" v-model="currentBus">
-            <option value="">温度传感器1</option>
-            <option value="">粉尘传感器1</option>
+          <ISelect class="w-32" v-model="currentClient">
+            <option
+              v-for="client in clientOptions"
+              :value="client.address">{{ client.name }}</option>
           </ISelect>
-          <ISelect class="w-32">
-            <option value="">低报</option>
-            <option value="">更换地址</option>
-            <option value="">修改单位</option>
+          <ISelect class="w-32" v-model="currentCommand">
+            <option 
+              v-for="cmd in commandOptions" 
+              :value="cmd.value">{{ cmd.name }}</option>
           </ISelect>
-          <IInput class="w-40" v-model="currentCommand" />
-          <IButton @click="sendCommand(currentBus, currentCommand)">发送</IButton>
+          <IInput class="w-40" v-model="currentPayload" />
+          <IButton @click="sendCommandToBus">发送</IButton>
         </IFlexRow>
       </div>
 

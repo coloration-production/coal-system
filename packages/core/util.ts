@@ -4,12 +4,24 @@ export function formatNumberAddressToHex (address: number): string {
   return v.length < 2 ? `0${v}` : v
 }
 
+export function bufferFromHex (str: string) {
+  const bufferArray = new ArrayBuffer(str.length / 2)
+  const uint8View = new Uint8Array(bufferArray)
+  uint8View.forEach((_, i) => {
+    uint8View[i] = parseInt(`0x${str.slice(i * 2, i * 2 + 2)}`)
+  })
+
+  return bufferArray
+}
 
 export function suffixCrc (str: string): string {
 
   let wcrc = 0xffff // 16位寄存器预置
-  const buffer = Buffer.from(str, 'hex')
-  buffer.forEach(bf => {
+  const buffer = bufferFromHex(str)
+
+  const uint8View = new Uint8Array(buffer)
+
+  uint8View.forEach(bf => {
 
     wcrc ^= bf & 0x00ff // 将8位数据与crc寄存器异或
 
@@ -78,4 +90,15 @@ export function debounce (fn: Function, time: number) {
       enable = enable
     }
   }
+}
+
+export function numberPrefix (placeholder: string | number, length: number, n: any): string {
+  let r = String(n)
+  placeholder = placeholder || '0'
+  length = length || r.length
+  while (r.length < length) {
+    r = placeholder + r
+  }
+
+  return r
 }

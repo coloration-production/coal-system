@@ -3,6 +3,7 @@ import { IotBus } from '../bus/IotBus'
 
 export class IotClient {
   #value: number = 0
+  address: number = 0
   bus: IotBus | null = null
   name: string = ''
   uri: string = ''
@@ -28,6 +29,7 @@ export class IotClient {
     this.fixCount = options.fixCount || this.fixCount
     this.warning = options.warning || this.warning
     this.unit = options.unit || this.unit
+    this.address = options.address || this.address
   }
 
   get value () {

@@ -88,4 +88,15 @@ export class IotWebSocketBus extends IotBus {
       this.sendQueue.push(d)
     }
   }
+
+  request (d: any) {
+    let item = this.sendQueue.find(item => item.key === d.key)
+    if (item) {
+      item.data = d.data
+    }
+    else {
+      this.sendQueue.push(d)
+    }
+    return Promise.resolve()
+  }
 }

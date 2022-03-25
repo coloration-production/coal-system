@@ -44,7 +44,7 @@ function init () {
 
   window.ipcRenderer.on(IpcType.IOT_WARNING, (event, data) => {
     console.log('warning', data)
-    warn(data)
+    // warn(data)
     store.dispatch('updateWarningHistory', data)
   })
 

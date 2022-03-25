@@ -1,15 +1,16 @@
 <script setup lang="ts">
-import { ILayout, IUsergroupIcon, IDotsIcon, IBarChartIcon, IBoardIcon } from '@coloration/island'
-import ISidebar from './ISidebar.vue'
+import { ILayout, IUsergroupIcon, IDotsIcon, IBarChartIcon, IBoardIcon, ISidebar } from '@coloration/island'
+import { useRoute, useRouter } from 'vue-router'
 
-
+const router = useRouter()
+const route = useRoute()
 const options = [
   { name: '功能', value: [
     { name: '数据概览', value: '/dashboard/insight', icon: IBarChartIcon },
-    { name: '粉尘监控',  icon: IBarChartIcon, value: [
-      { name: '设备列表', value: '/dashboard/dust-devices', },
-      { name: '设备管理', value: '/dashboard/dust-manage', },
-    ] },
+    // { name: '粉尘监控',  icon: IBarChartIcon, value: [
+    //   { name: '设备列表', value: '/dashboard/dust-devices', },
+    //   { name: '设备管理', value: '/dashboard/dust-manage', },
+    // ] },
     { name: '历史记录', value: '/dashboard/history', icon: IBoardIcon }
   ] },
   { name: '系统', value: [
@@ -20,11 +21,17 @@ const options = [
     ] }, 
   ]}
 ]
+
+
+
+function handleChange (option: any) {
+  router.push(option.value)
+}
 </script>
 
 <template>
   <ILayout type="horizontal">
-    <ISidebar :options="options" />
+    <ISidebar :options="options" @change="handleChange" :active="route.path"/>
     <ILayout>
       <header class="h-16 border-b border-gray-300 flex justify-end items-center">
         <div class="text-gray-600 hover:text-indigo-500 mr-4">
