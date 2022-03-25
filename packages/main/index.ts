@@ -3,7 +3,7 @@ import { release } from 'os'
 import { join } from 'path'
 import './auth'
 import './dust'
-import config from '../config.json'
+import config from '../../electron-builder.json'
 
 const windowWidth = 1600
 const windowHeight = 1000
@@ -30,7 +30,7 @@ let win: BrowserWindow | null = null
 
 async function createWindow() {
   win = new BrowserWindow({
-    title: config.app,
+    title: config.productName,
     webPreferences: {
       preload: join(__dirname, '../preload/index.cjs')
     },

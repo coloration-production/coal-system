@@ -1,4 +1,5 @@
 {
+  "productName": "粉尘信号管理系统",
   "appId": "YouAppID",
   "asar": true,
   "directories": {

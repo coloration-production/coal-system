@@ -5,14 +5,14 @@ import { IpcType } from '../../types'
 import { startModule } from './api'
 import { ILayout, IModal, ITitle, IText, IBadge, IHangText } from '@coloration/island'
 import { useToggle, useTitle } from '@vueuse/core'
-import config from '../../config.json'
+import config from '../../../electron-builder.json'
 
 const store = useStore()
 const [warningVisible, toggleWarningVisible] = useToggle(false)
 const warningData = ref<any>({})
 const warningBellDom = ref<HTMLAudioElement | null>(null)
 
-const title = useTitle(config.app)
+const title = useTitle(config.productName)
 
 function reset () {
   return new Promise((resolve, reject) => {
