@@ -93,6 +93,7 @@ export class IotModule {
   }
 
   mount (options: any, cb?: Function) {
+    console.log('module start')
     this.fixCount = options.fixCount || this.fixCount
     this.unit = options.unit || this.unit
     this.warning = options.warning || this.warning
@@ -187,7 +188,27 @@ export class IotModule {
   }
 
   unmount () {
+    console.log('module end')
     this.#buses.forEach(n => n.unmount())
+    this.#buses.length = 0
+    this.fixCount = 2
+    this.unit = ''
+    this.warning = 10000
+    this.interval = 2000
+    this.cacheLength = 5
+    this.max = 0
+    this.average = 0
+    this.maxCache.clear()
+    this.averageCache.clear()
+    this.clientCount = 0
+    this.busCount = 0
+    this.cb = undefined
+    this.busNormalCount = 0
+    this.busAbnormalCount = 0
+    this.busOfflineCount = 0
+    this.clientNormalCount = 0
+    this.clientAbnormalCount = 0
+    this.clientOfflineCount = 0
   }
 
   static get instance () {

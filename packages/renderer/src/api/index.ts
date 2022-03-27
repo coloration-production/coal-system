@@ -28,8 +28,12 @@ export function resetConfigFile () {
   return request(RequestType.RESET_CONFIG_FILE)
 }
 
-export function startModule () {
+export function mountModule () {
   return request(RequestType.START_MODULE)
+}
+
+export function unmountModule () {
+  return request(RequestType.UNMOUNT_MODULE)
 }
 
 export function getHistory () {

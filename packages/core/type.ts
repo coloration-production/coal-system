@@ -65,3 +65,35 @@ export interface IotHistoryItemDto {
   warningCount: number,
   clients: String[]
 }
+
+
+export interface IotBaseConfigure {
+  readCommand: string
+  readInterval: number
+  calcRatio: number
+  calcOffset: number
+}
+
+export interface IotClientConfigure extends IotBaseConfigure {
+  name: string
+  address: number
+}
+
+export interface IotBusConfigure extends IotBaseConfigure {
+  name: string,
+  uri: string,
+  clients: IotClientConfigure[]
+}
+
+export interface IotModuleConfigure extends IotBaseConfigure {
+  signal: IotTerminalSignal,
+  protocol: IotTerminalProtocol,
+  fixCount: number,
+  unit: string,
+  warning: number,
+  max: number,
+  average: number,
+  interval: number,
+  cacheLength: number,
+  buses: IotBusConfigure[]
+}

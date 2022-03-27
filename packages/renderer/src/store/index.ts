@@ -30,6 +30,11 @@ export const store = createStore<IStore>({
     }
   },
   actions: {
+    upgradeDust (context) {
+      context.commit('update', {
+        dust: IotModule.instance.getJSONData()
+      })
+    },
     update (context, payload) {
       context.commit('update', payload)
     },

@@ -39,8 +39,8 @@ regist(RequestType.RESET_CONFIG_FILE, (e: any) => {
 regist(RequestType.START_MODULE, (e: any) => {
   const conf: any = dustStore.get(DUST_CONFIG_STORE_KEY)
 
-  // conf.signal = ''
-  // conf.protocol = ''
+  conf.signal = ''
+  conf.protocol = ''
 
   const sys = IotModule.instance
   sys.unmount()
@@ -79,6 +79,14 @@ regist(RequestType.START_MODULE, (e: any) => {
   })
 
   return e.reply({ status: 200, message: '', data: conf })
+})
+
+
+regist(RequestType.UNMOUNT_MODULE, (e: any) => {
+  const sys = IotModule.instance
+  sys.unmount()
+
+  return e.reply({ status: 200, message: '', data: null })
 })
 
 

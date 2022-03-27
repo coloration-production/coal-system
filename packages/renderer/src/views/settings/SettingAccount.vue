@@ -57,7 +57,7 @@ function handleReset () {
     </div>
   </template>
 
-  <ICard>
+  <ICard class="bg-opacity-90">
     <ILayout class="px-6 py-6">
       <ITitle :level="3" class="mb-2">修改密码</ITitle>
       <IText size="sm" class="mb-4">登录当前系统所使用的密码</IText>

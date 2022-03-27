@@ -56,6 +56,11 @@ export class FixLengthQueue<T = any> {
     }
   }
 
+  clear () {
+    this.#list.length = 0
+    this.#length = 0
+  }
+
   push (item: T) {
     if (this.#list.length === this.#length) {
       this.#list.shift()

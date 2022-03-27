@@ -41,16 +41,17 @@ function handleClearHistory () {
       <IHangText size="md">History Record</IHangText>
     </div>
   </template>
-  <ICard title="近30天报警记录">
+  <ICard title="近30天报警记录" class="bg-opacity-90">
     <template v-slot:header-rest>
       <div class="flex flex-1 justify-between items-end ml-2">
         <IHangText>History Record</IHangText>
-        <IButton color="red" @click="(toggleConfirmVisible as any)">清除记录</IButton>
+        <IButton color="red" type="primary" @click="(toggleConfirmVisible as any)">清除记录</IButton>
       </div>
     </template>
     <Table 
       :columns="columns"
-      :items="items">
+      :items="items"
+    >
 
       <template #table-col-clients="{ item }">
         <IText size="xs" v-for="cl in item.clients" :key="cl" class="mr-2">

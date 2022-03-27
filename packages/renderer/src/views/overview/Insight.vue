@@ -29,7 +29,7 @@ function clearHistory () {
   <div>
     <div class="grid grid-cols-12 gap-6">
       <div class="col-span-full">
-        <ICard title="设备实时状态">
+        <ICard title="设备实时状态" class="bg-opacity-90">
           <template #header-rest>
             <div class="flex-1 ml-2">
               <IHangText>Real time status of equipment</IHangText>
@@ -49,9 +49,9 @@ function clearHistory () {
                   <div 
                     class="absolute left-0 top-0 bottom-0 transition-all" 
                     :class="{ 
-                      'bg-gray-100': cl.status === IotTerminalStatus.offline,
-                      'bg-indigo-100': cl.status === IotTerminalStatus.normal,
-                      'bg-red-100': cl.status === IotTerminalStatus.abnormal,
+                      'bg-gray-300': cl.status === IotTerminalStatus.offline,
+                      'bg-indigo-300': cl.status === IotTerminalStatus.normal,
+                      'bg-red-300': cl.status === IotTerminalStatus.abnormal,
                     }"
                     :style="{
                       width: (cl.value / mod.warning) * 100 + '%'
@@ -80,13 +80,13 @@ function clearHistory () {
         </ICard>
       </div>
       <div class="col-span-full xl:col-span-8">
-        <ICard title="粉尘">
+        <ICard title="粉尘"  class="bg-opacity-90">
           <template #header-rest>
             <div class="flex-1 ml-2">
               <IHangText>Dust</IHangText>
             </div>
           </template>
-          <div class="flex bg-white rounded-sm">
+          <div class="flex rounded-sm">
             <div class="flex flex-col flex-1">
               <div class="px-5 pt-5">
                 <IHangText>最大值{{timeSuffix}}</IHangText>
@@ -127,6 +127,7 @@ function clearHistory () {
       <div class="col-span-full xl:col-span-4 min-h-92">
         <ICard 
           title="报警记录"
+          class="bg-opacity-90"
         >
 
           <template v-slot:header-rest>
@@ -136,7 +137,7 @@ function clearHistory () {
             </div>
           </template>
           <Table
-             class="h-24"
+             class="h-24 bg-opacity-0"
             :columns="[
               { prop: 'date', label: '时间' },
               { prop: 'bus', label: '线路' },
@@ -163,7 +164,7 @@ function clearHistory () {
         </ICard>
       </div>
       <div class="col-span-6 xl:col-span-6">
-        <ICard title="设备信号状态">
+        <ICard title="设备信号状态" class="bg-opacity-90">
           <template #header-rest>
             <div class="flex-1 ml-2">
               <IHangText>Client signal status</IHangText>
@@ -196,7 +197,7 @@ function clearHistory () {
         </ICard>
       </div>
       <div class="col-span-6 xl:col-span-6">
-        <ICard title="通道信号状态">
+        <ICard title="通道信号状态"  class="bg-opacity-90">
           <template #header-rest>
             <div class="flex-1 ml-2">
               <IHangText>Bus signal status</IHangText>

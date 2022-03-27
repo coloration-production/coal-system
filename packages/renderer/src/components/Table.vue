@@ -37,7 +37,7 @@ export default defineComponent({
 })
 </script>
 <template>
-  <div class="bg-white rounded-sm relative">
+  <div class="rounded-sm relative" v-bind="$attrs">
     <div>
       <!-- Table -->
       <div class="overflow-x-auto">
