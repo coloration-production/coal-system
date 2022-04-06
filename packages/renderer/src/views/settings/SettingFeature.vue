@@ -16,8 +16,8 @@ const [modifyVisible, toggleModifyVisible] = useToggle(false)
 
 const clientOptions = ref<IotClientConfigure[]>([])
 const commandOptions = ref<PlainObject[]>([
-  // { name: '修改地址', value: '060064', key: 'address', },
-  { name: '修改地址', value: '06000C', key: 'address', },
+  // { name: '修改地址(温度)', value: '060064', key: 'address', },
+  { name: '修改地址(粉尘)', value: '06000C', key: 'address' },
   // { name: '修改名称', value: '', key: 'name', },
   { name: '修改低报', value: '060001', key: 'warning', },
   { name: '修改单位', value: '060017', key: 'unit', },
@@ -96,8 +96,10 @@ function sendCommandToBus () {
   if (cmdOpt.value) {
     let value = Number(currentPayload.value).toString(16)
     value = numberPrefix(0, 4, value)
-    let hexAddress = currentClient.value.toString(16)
-    hexAddress = hexAddress.length === 1 ? '0' + hexAddress : hexAddress
+    let hexAddress = Number(cmdOpt.address || currentClient.value).toString(16)
+    hexAddress = numberPrefix(0, 2, hexAddress)
+
+    console.log('currentClient.value', currentClient.value, hexAddress)
     const str = suffixCrc(`${hexAddress}${currentCommand.value}${value}`)
     
     console.log(str)
@@ -355,7 +357,7 @@ watch(currentBus, () => {
     @close="toggleResetVisible" 
     @confirm="toggleResetVisible"
     :line-visible="false">
-    你确定重置配置吗？重置后无法找回当前配置，建议先拷贝备份。修改配置后需要重启软件才能生效。
+    你确定重置配置吗？重置后无法找回当前配置，建议先拷贝备份。修改配置后需要重新登录才能生效。
     <template #footer-cancel-button-name>
         取消
     </template>
