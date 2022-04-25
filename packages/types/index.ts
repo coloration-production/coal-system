@@ -52,6 +52,7 @@ export enum IpcType {
 
   IOT_TRANS = 'IOT_TRANS',
   IOT_WARNING = 'IOT_WARNING',
+  AUTO_LOGIN = 'AUTO_LOGIN'
 }
 
 export enum RequestType {

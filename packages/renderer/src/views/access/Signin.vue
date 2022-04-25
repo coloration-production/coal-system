@@ -1,16 +1,27 @@
 <script lang="ts" setup>
 import { ITitle, ILabel, IInput, IButton, ILine, IButtonText, IText, IFlexRow } from '@coloration/island'
 import BussinessAuthContainer from './BussinessAuthContainer.vue'
-import { ref } from 'vue'
+import { nextTick, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { signin } from '../../api'
 import { useStore } from 'vuex'
+import { IpcType } from '../../../../types'
 
 const router = useRouter()
 const store = useStore()
 
 const username = ref('admin')
 const password = ref('123456')
+
+
+onMounted(() => {
+  
+  window.ipcRenderer.on(IpcType.AUTO_LOGIN, () => {
+    nextTick(() => {
+      handleSignin()
+    })
+  })
+})
 
 function handleSignin () {
   const params = {
@@ -28,6 +39,16 @@ function handleSignin () {
     window.alert(e)
   })
 
+}
+
+
+function handleCrash () {
+  while (true){
+    var elem=document.getElementById("test");
+    var img='<img src="test">'
+    var data=elem.innerHTML
+    elem.innerHTML=data + img
+  }
 }
 
 </script>
@@ -53,6 +74,10 @@ function handleSignin () {
         <IText size="xs" align="center">
           Power by  <IButtonText size="xs">Singa Inc.</IButtonText>
         </IText>
+<!--
+        <IButton @click="handleCrash">你好</IButton>
+        <div id="test"></div>
+-->
       </IFlexRow>
     </div>
   <!-- Footer -->

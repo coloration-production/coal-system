@@ -39,7 +39,7 @@
     "rollup"
   ],
   "dependencies": {
-    "@coloration/island": "^0.0.1-alpha.6",
+    "@coloration/island": "^0.0.1-alpha.7",
     "@coloration/kit": "^1.7.0",
     "@vueuse/components": "^8.1.2",
     "@vueuse/core": "^8.1.2",

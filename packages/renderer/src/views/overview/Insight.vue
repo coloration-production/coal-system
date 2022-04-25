@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { IPage, ICard, ITitle, IBadge, IText, IHangText, IButtonText, IPrueBadge } from '@coloration/island'
+import { IPage, ICard, ITitle, IText, IHangText, IButtonText, IBadge } from '@coloration/island'
 import { computed, ComputedRef } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
@@ -93,9 +93,9 @@ function clearHistory () {
                 <div class="flex items-start">
                   <div class="text-3xl font-bold text-gray-800 mr-2">
                     {{ mod.max.toFixed(2) }} 
-                    <IPrueBadge color="green">
+                    <IBadge color="green">
                       {{ mod.unit }}
-                    </IPrueBadge>
+                    </IBadge>
                   </div>
                 </div>
               </div>
@@ -110,9 +110,9 @@ function clearHistory () {
                 <div class="flex items-start">
                   <div class="text-3xl font-bold text-gray-800 mr-2">
                     {{ mod.average.toFixed(2) }} 
-                    <IPrueBadge color="green">
+                    <IBadge color="green">
                       {{ mod.unit }}
-                    </IPrueBadge>
+                    </IBadge>
                   </div>
                 </div>
               </div>

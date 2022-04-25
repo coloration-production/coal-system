@@ -188,14 +188,14 @@ watch(currentBus, () => {
         <IFlexRow class="gap-4">
           <div>
             <ILabel for="signal">信号</ILabel>
-            <ISelect id="signal" v-model="configData.signal" disabled>
+            <ISelect id="signal" v-model="configData.signal" disabled class="w-50">
               <option value="ws">WebSocket</option>
             </ISelect>
           </div>
           
           <div>
             <ILabel for="protocol">协议</ILabel>
-            <ISelect id="protocol" v-model="configData.protocol" disabled>
+            <ISelect id="protocol" v-model="configData.protocol" disabled  class="w-50">
               <option value="rs485">RS485</option>
             </ISelect>
           </div>
@@ -204,12 +204,12 @@ watch(currentBus, () => {
         <IFlexRow class="gap-4">
           <div>
             <ILabel for="readCommand">读取命令</ILabel>
-            <IInput id="readCommand" v-model="configData.readCommand" disabled />
+            <IInput id="readCommand" v-model="configData.readCommand" disabled class="w-50" />
           </div>
           
           <div>
             <ILabel for="readInterval">读取间隔(秒)</ILabel>
-            <IInput id="readInterval" v-model.number="configData.readInterval" />
+            <IInput id="readInterval" v-model.number="configData.readInterval" class="w-50" />
           </div>
         </IFlexRow>
 

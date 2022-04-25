@@ -1,9 +1,10 @@
-import { app, BrowserWindow, shell, Menu } from 'electron'
+import { app, BrowserWindow, shell, Menu, ipcMain } from 'electron'
 import { release } from 'os'
 import { join } from 'path'
 import './auth'
 import './dust'
 import config from '../../electron-builder.json'
+import { IpcType } from '../types'
 
 const windowWidth = 1600
 const windowHeight = 1000
@@ -59,6 +60,18 @@ async function createWindow() {
     if (url.startsWith('https:')) shell.openExternal(url)
     return { action: 'deny' }
   })
+
+  // 
+  win.webContents.on('unresponsive', () => {
+    app.relaunch()
+    app.exit()
+    
+  })
+
+  win.webContents.on('responsive', () => {
+    
+  })
+
 }
 
 app.whenReady().then(createWindow)
