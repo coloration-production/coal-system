@@ -112,11 +112,13 @@ onUnmounted(() => {
       </header>
       <ILayout>
         <div class="w-full h-full flex-1 bg-gray-100 relative">
-          <img class="absolute w-full h-full opacity-50 object-fill z-0 select-none" src="../assets/contain-bg.png" />
-          <div class="w-full h-full flex-1 z-10">
+          <div class="w-full h-full flex-1 z-10 relative">
             <router-view />
           </div>
+          <img class="absolute w-full h-full left-0 top-0 opacity-50 object-fill z-0 select-none" src="../assets/contain-bg.png" />
+
           <audio id="warning-bell" loop ref="warningBellDom" src="/warning.mp3" />
+
           <IModal 
             title="警告"
             :visible="warningVisible" 

@@ -42,14 +42,14 @@ function handleSignin () {
 }
 
 
-function handleCrash () {
-  while (true){
-    var elem=document.getElementById("test");
-    var img='<img src="test">'
-    var data=elem.innerHTML
-    elem.innerHTML=data + img
-  }
-}
+// function handleCrash () {
+//   while (true){
+//     var elem=document.getElementById("test");
+//     var img='<img src="test">'
+//     var data=elem.innerHTML
+//     elem.innerHTML=data + img
+//   }
+// }
 
 </script>
 <template>

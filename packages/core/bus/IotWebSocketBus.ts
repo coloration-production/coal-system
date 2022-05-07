@@ -34,19 +34,19 @@ export class IotWebSocketBus extends IotBus {
     socket.binaryType = 'arraybuffer'
     this.ws = socket
     let receiving = false
-    console.log('abc', this.uri)
+    // console.log('abc', this.uri)
     this.#timer = setInterval(() => {
       if (receiving) return
       if (this.sendQueue.length !== 0) {
         setTimeout(() => {
           const next = this.sendQueue.shift()
           if (next) {
-            console.log('send data', next)
+            // console.log('send data', next)
             socket.send(next.data)
           }
         }, 100)
       }
-    }, 100) as any
+    }, 300) as any
     socket.on('message', (data: ArrayBuffer) => {
       console.log('callback', data) 
       receiving = true

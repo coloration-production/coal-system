@@ -1,33 +1,227 @@
 {
   "signal": "ws",
-  "unit": "",
+  "unit": "ug",
   "protocol": "rs485",
-  "readInterval": 2,
-  "readCommand": "",
+  "readInterval": 20,
+  "readCommand": "0300000002",
   "calcRatio": 1,
   "calcOffset": 0,
-  "warning": 20000,
-  "fixcount": 2,
+  "warning": 3000,
+  "fixCount": 2,
   "buses": [
     {
-      "name": "线路1",
-      "uri": "192.168.0.7:6432",
+      "name": "485-1",
+      "uri": "192.168.0.101:6432",
       "clients": [
         {
-          "address": 1,
-          "unit": "摄氏度",
-          "warning": 24,
-          "calcRatio": 0.1,
-          "readCommand": "0300000001",
-          "name": "温度传感器1"
+          "name": "粉尘1",
+          "address": 1
         },
         {
-          "address": 2,
-          "unit": "ug/m^3",
-          "warning": 300,
-          "calcRatio": 1,
-          "readCommand": "0300000001",
-          "name": "粉尘传感器1"
+          "name": "粉尘2",
+          "address": 2
+        },
+        {
+          "name": "粉尘3",
+          "address": 3
+        },
+        {
+          "name": "粉尘4",
+          "address": 4
+        },
+        {
+          "name": "粉尘5",
+          "address": 5
+        },
+        {
+          "name": "粉尘6",
+          "address": 6
+        },
+        {
+          "name": "粉尘7",
+          "address": 7
+        },
+        {
+          "name": "粉尘8",
+          "address": 8
+        },
+        {
+          "name": "粉尘9",
+          "address": 9
+        },
+        {
+          "name": "粉尘10",
+          "address": 10
+        },
+        {
+          "name": "粉尘11",
+          "address": 11
+        },
+        {
+          "name": "粉尘12",
+          "address": 12
+        }
+      ]
+    },
+    {
+      "name": "485-2",
+      "uri": "192.168.0.102:6432",
+      "clients": [
+        {
+          "name": "粉尘1",
+          "address": 1
+        },
+        {
+          "name": "粉尘2",
+          "address": 2
+        },
+        {
+          "name": "粉尘3",
+          "address": 3
+        },
+        {
+          "name": "粉尘4",
+          "address": 4
+        },
+        {
+          "name": "粉尘5",
+          "address": 5
+        },
+        {
+          "name": "粉尘6",
+          "address": 6
+        },
+        {
+          "name": "粉尘7",
+          "address": 7
+        },
+        {
+          "name": "粉尘8",
+          "address": 8
+        },
+        {
+          "name": "粉尘9",
+          "address": 9
+        },
+        {
+          "name": "粉尘10",
+          "address": 10
+        },
+        {
+          "name": "粉尘11",
+          "address": 11
+        },
+        {
+          "name": "粉尘12",
+          "address": 12
+        }
+      ]
+    },
+    {
+      "name": "485-3",
+      "uri": "192.168.0.103:6432",
+      "clients": [
+        {
+          "name": "粉尘1",
+          "address": 1
+        },
+        {
+          "name": "粉尘2",
+          "address": 2
+        },
+        {
+          "name": "粉尘3",
+          "address": 3
+        },
+        {
+          "name": "粉尘4",
+          "address": 4
+        },
+        {
+          "name": "粉尘5",
+          "address": 5
+        },
+        {
+          "name": "粉尘6",
+          "address": 6
+        },
+        {
+          "name": "粉尘7",
+          "address": 7
+        },
+        {
+          "name": "粉尘8",
+          "address": 8
+        },
+        {
+          "name": "粉尘9",
+          "address": 9
+        },
+        {
+          "name": "粉尘10",
+          "address": 10
+        },
+        {
+          "name": "粉尘11",
+          "address": 11
+        },
+        {
+          "name": "粉尘12",
+          "address": 12
+        }
+      ]
+    },
+    {
+      "name": "485-4",
+      "uri": "192.168.0.104:6432",
+      "clients": [
+        {
+          "name": "粉尘1",
+          "address": 1
+        },
+        {
+          "name": "粉尘2",
+          "address": 2
+        },
+        {
+          "name": "粉尘3",
+          "address": 3
+        },
+        {
+          "name": "粉尘4",
+          "address": 4
+        },
+        {
+          "name": "粉尘5",
+          "address": 5
+        },
+        {
+          "name": "粉尘6",
+          "address": 6
+        },
+        {
+          "name": "粉尘7",
+          "address": 7
+        },
+        {
+          "name": "粉尘8",
+          "address": 8
+        },
+        {
+          "name": "粉尘9",
+          "address": 9
+        },
+        {
+          "name": "粉尘10",
+          "address": 10
+        },
+        {
+          "name": "粉尘11",
+          "address": 11
+        },
+        {
+          "name": "粉尘12",
+          "address": 12
         }
       ]
     }

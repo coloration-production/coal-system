@@ -5,6 +5,7 @@ import './auth'
 import './dust'
 import config from '../../electron-builder.json'
 import { IpcType } from '../types'
+import path from 'path'
 
 const windowWidth = 1600
 const windowHeight = 1000
@@ -96,4 +97,16 @@ app.on('activate', () => {
   } else {
     createWindow()
   }
+})
+
+// 开机自启
+const exeName = path.basename(process.execPath)
+
+app.setLoginItemSettings({
+  openAtLogin: true,
+  openAsHidden: false,
+  path: process.execPath,
+  args: [
+    '--processStart', `"${exeName}"`,
+  ]
 })

@@ -163,6 +163,7 @@ function clearHistory () {
           </Table>
         </ICard>
       </div>
+      <!--
       <div class="col-span-6 xl:col-span-6">
         <ICard title="设备信号状态" class="bg-opacity-90">
           <template #header-rest>
@@ -229,6 +230,8 @@ function clearHistory () {
           </div>
         </ICard>
       </div>
+      
+      -->
       
     </div>
   </div>

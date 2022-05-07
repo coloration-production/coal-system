@@ -1,6 +1,6 @@
 {
   "name": "coal-system",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "dist/main/index.cjs",
   "author": "Binyu.Wang <308487730@qq.com>",
   "license": "MIT",
