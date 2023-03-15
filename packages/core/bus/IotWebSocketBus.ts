@@ -67,6 +67,7 @@ export class IotWebSocketBus extends IotBus {
       this.clients.forEach((cl, i) => {
         setTimeout(() => {
           cl.mount()
+          this.mod?.tick()
         }, (0))
       })
     })
