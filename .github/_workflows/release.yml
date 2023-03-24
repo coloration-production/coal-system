@@ -1,78 +1,54 @@
 name: Release
 
-on:
-  pull_request:
+on: 
   push:
-  release:
-    branches: [main]
-    types:
-      - published
-    paths-ignore:
-      - "**.md"
-      - "**.spec.js"
-      - ".idea"
-      - ".vscode"
-      - ".dockerignore"
-      - "Dockerfile"
-      - ".gitignore"
-      - ".github/**"
-      - "!.github/workflows/release.yml"
+    tags:
+      - v**
 
-defaults:
-  run:
-    shell: "bash"
 
 jobs:
-  build:
-    # see more environment https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idruns-on
-    runs-on: [ubuntu-20.04]
-    # https://www.electron.build/multi-platform-build#provided-docker-images
-    container: electronuserland/builder:wine
+  strategy:
+    fail-fast: false
+    matrix:
+      os: [windows-latest]
 
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      ELECTRON_BUILDER_CACHE: "/root/.cache/electron-builder"
-      ELECTRON_CACHE: "/root/.cache/electron"
-
-    strategy:
-      matrix:
-        node: ["14"]
+  release:
+    name: build and release electron app
+    runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out git repository
+        uses: actions/checkout@v3.0.0
+      
+      - name: Install Node.js
+        uses: actions/setup-node@v3.0.0
         with:
-          fetch-depth: 0
-
-      - name: Use Node.js ${{ matrix.node }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Install dependencies
+          node-version: "16"
+          
+      - name: Install Dependencies
         run: npm install
-
-      - name: Run tests
-        run: npm run test
-
-      # - name: Build dependencies
-      #   run: npm run build
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # - uses: actions/upload-artifact@v2
-      #   with:
-      #     name: upload-artifact
-      #     path: |
-      #       release/electron-vue-vite*.exe
-      #       release/electron-vue-vite*.AppImage
-      #       release/electron-vue-vite*.snap
-
-      # https://github.com/marketplace/actions/electron-builder-action
-      - name: Compile & Release Electron app
-        uses: samuelmeuli/action-electron-builder@v1
+        
+      - name: Build Electron App
+        run: npm run build
+      
+      - name: Cleanup Artifacts for Windows
+        if: matrix.os == 'windows-latest'
+        run: |
+          npx rimraf "release/!(*.exe)"
+      
+      - name: Cleanup Artifacts for MacOS
+        if: matrix.os == 'macos-latest'
+        run: |
+          npx rimraf "release/!(*.dmg)"
+      
+      - name: 'Gen changelog'
+          run: npx changelogithub # or changelogithub@0.12 if ensure the stable result
+          env:
+            GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+  
+      - name: release
+        uses: softprops/action-gh-release
+        # if: startsWith(github.ref, 'refs/tags/')
         with:
-          build_script_name: prebuild
-          args: --config electron-builder.json
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          release: ${{ startsWith(github.ref, 'refs/tags/v') && github.event_name == 'push' && needs.get_metadata.outputs.branch == 'main'}}
-          max_attempts: 5
+          files: "release/**"
+
