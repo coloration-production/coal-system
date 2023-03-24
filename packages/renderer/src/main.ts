@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import '@coloration/island/dist/style.css'
 import App from './App.vue'
 import { appRouter } from './router'
-import 'virtual:windi.css'
+import 'uno.css'
 import './style/index.css'
 import { store } from './store'
 

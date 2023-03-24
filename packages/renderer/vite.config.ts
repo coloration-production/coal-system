@@ -1,9 +1,10 @@
 import { builtinModules } from 'module'
 import { defineConfig, Plugin } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import WindiCSS from 'vite-plugin-windicss'
 import resolve from 'vite-plugin-resolve'
 import pkg from '../../package.json'
+import UnoCSS from 'unocss/vite'
+import { presetUno } from 'unocss'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -11,7 +12,12 @@ export default defineConfig({
   root: __dirname,
   plugins: [
     vue(),
-    WindiCSS(),
+    UnoCSS({
+      presets: [
+        presetUno(),
+        // ...custom presets
+      ],
+    }) as any,
     resolveElectron(
       /**
        * Here you can specify other modules
