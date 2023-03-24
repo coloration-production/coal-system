@@ -48,15 +48,17 @@ jobs:
           npx rimraf "release/!(*.dmg)"
       
       - name: 'Gen changelog'
-        run: npx changelogithub@0.12 # or changelogithub@0.12 if ensure the stable result
-        run: ls
-        run: cd release
-        run: ls
+        run: |
+          npx changelogithub@0.12 # or changelogithub@0.12 if ensure the stable result
+          ls
+          cd release
+          ls
   
       - name: release
         uses: softprops/action-gh-release@v1
         # if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            "release/**"
+            release/*.exe
+            release/*.dmg
 

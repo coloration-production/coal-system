@@ -3,7 +3,7 @@
   "appId": "YouAppID",
   "asar": true,
   "directories": {
-    "output": "release/${version}"
+    "output": "release"
   },
   "files": [
     "dist"
