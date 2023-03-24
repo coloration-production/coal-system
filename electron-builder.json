@@ -1,6 +1,6 @@
 {
   "productName": "coal_signal_system",
-  "appId": "YouAppID",
+  "appId": "com.coloration.chaoyang_coal_signal_system",
   "asar": true,
   "directories": {
     "output": "release"
