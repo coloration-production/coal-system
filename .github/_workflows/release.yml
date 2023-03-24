@@ -7,14 +7,14 @@ on:
 
 
 jobs:
-  strategy:
-    fail-fast: false
-    matrix:
-      os: [windows-latest]
-
   release:
     name: build and release electron app
     runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest]
 
     steps:
       - name: Check out git repository
@@ -42,9 +42,9 @@ jobs:
           npx rimraf "release/!(*.dmg)"
       
       - name: 'Gen changelog'
-          run: npx changelogithub # or changelogithub@0.12 if ensure the stable result
-          env:
-            GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: npx changelogithub # or changelogithub@0.12 if ensure the stable result
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
   
       - name: release
         uses: softprops/action-gh-release
