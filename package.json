@@ -1,8 +1,8 @@
 {
   "name": "coal-system",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/main/index.cjs",
-  "author": "Binyu.Wang <308487730@qq.com>",
+  "author": "Binyu.Wang <406279919@qq.com>",
   "license": "MIT",
   "scripts": {
     "dev": "node scripts/watch.mjs",
