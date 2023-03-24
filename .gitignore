@@ -7,4 +7,4 @@ dist-ssr
 tmp
 **/.tmp
 release
--lock.json
+*-lock.json
